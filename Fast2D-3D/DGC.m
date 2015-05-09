@@ -1,5 +1,5 @@
 
-function stereo= DGC(Query_rgb_original, mask, param, p, Dataset_GIST, Query_txt_name,Ref_Path,Query_Path, I,temp)
+function stereo= DGC(Query_rgb_original, mask, param, p, Dataset_GIST, Query_txt_name,Ref_Path,Query_Path, I,temp,Gx, Gy, xx, yy, YY)
 
 
 %%%% Setup %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -249,8 +249,9 @@ end
 %imwrite(uint8([I_Query_matched_rgb   Depth_Query_rgb]), [Query_Path,'Output/match_color',Query_txt_name(1:end-4),'.png'],'png');
 
 %stereo= uint8([Query_rgb_original   Depth_Query_rgb]);
-
-stereo = 255*WarpFinal(im2double(Query_rgb_original),im2double(Depth_Query),max_disp,resize_factor);
+tic
+stereo = 255*WarpFinal(im2double(Query_rgb_original),im2double(Depth_Query),max_disp,resize_factor,Gx, Gy, xx, yy, YY);
+toc
 %stereo=Depth_Query;
 
     %end

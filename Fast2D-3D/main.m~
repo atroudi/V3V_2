@@ -73,13 +73,10 @@ for Query_Path_idx=1:size(Query_Paths,1)
     %Cuts = GetSceneCuts(Query_Path,1:Number_of_Frames,p.resize_factor);
     %Cuts= ones(1,Number_of_Frames);
     %toc
-    [CLASS,vres, hres] = GetSceneClassification_WithoutCuts(Query_Path,pwd,Number_of_Frames,p.resize_factor* (1/8));
+    CLASS = GetSceneClassification_WithoutCuts(Query_Path,pwd,Number_of_Frames,p.resize_factor* (1/8));
     toc
 
-    [Gx, Gy, xx, yy, YY] = GetGxGy(vres,hres/2,p.resize_factor);
-    xx = gpuArray(xx);
-    yy = gpuArray(yy);
-    YY = gpuArray(YY);
+    [Gx, Gy] = GetGxGy(vres,hres,p.resize_factor) ;
     
     %%%% For Each Frame %%%%%%%%%%%%%%%%%%%%%%%%
     Query_fr= 1:Number_of_Frames;
@@ -106,7 +103,7 @@ for Query_Path_idx=1:size(Query_Paths,1)
       end
     end
     Class1_Frames=size(Query_no_long,2)
-    %toc
+    toc
     
     %%% medium
     clear Query_no
@@ -123,14 +120,14 @@ for Query_Path_idx=1:size(Query_Paths,1)
           mask=imread(['mask/', num2str(Query_no_medium(Query_no)),'.png']);
           Query_txt_name=[num2str(Query_no_medium(Query_no)),'.png'];
           
-          stereo= DGC(Query_rgb_original, mask, param, p, Dataset_GIST, Query_txt_name,Ref_Path,Query_Path,ind,temp,Gx, Gy, xx, yy, YY);
-          imwrite(uint8(stereo), [Query_Path,'Output/',num2str(Query_no_medium(Query_no)),'.png'],'png');
+          stereo= DGC(Query_rgb_original, mask, param, p, Dataset_GIST, Query_txt_name,Ref_Path,Query_Path,ind,temp);
+          %imwrite(uint8(stereo), [Query_Path,'Output/',num2str(Query_no_medium(Query_no)),'.png'],'png');
       
       end
     end
     
     Class2_Frames=size(Query_no_medium,2)
-    %toc
+    toc
     
     %%% short
     clear Query_no
@@ -150,7 +147,7 @@ for Query_Path_idx=1:size(Query_Paths,1)
       end
     end  
     Class3_Frames=size(Query_no_short,2)
-    %toc
+    toc
     
 end
 
