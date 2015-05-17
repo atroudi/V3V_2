@@ -1,4 +1,4 @@
-function [CLASS,vres_original, hres_original] = GetSceneClassification_WithoutCuts(rootin,root,no_frames,resize_factor)
+function [CLASS,vres_original, hres_original, masks] = GetSceneClassification_WithoutCuts(rootin,root,no_frames,resize_factor,frames_processed)
 
 %%A function to classify scenes 
 
@@ -26,22 +26,22 @@ optmixture=optmixture_all.optmixture;
 
 GMM_threshold = -20;
 
-CLASS = nan(1,numel(no_frames));
+CLASS = uint8(nan(1,numel(no_frames)));
 
-I = imread([rootin '1.png']);
+I = imread([rootin, num2str(frames_processed+1), '.png']);
 [vres_original, hres_original, u] = size(I);
 I = double(imresize(I,resize_factor));
 [vres, hres, u] = size(I);
 num_pels = vres*hres;
 
-
+masks= false(vres, hres, no_frames);
 
 parfor fr =1:no_frames
   
     imfill_sum = 0;
     green_sum = 0;
   
-    I = double(imresize(imread([rootin num2str(fr) '.png']),resize_factor));
+    I = double(imresize(imread([rootin num2str(frames_processed+fr) '.png']),resize_factor));
 
     I_r = I(:,:,1);
     I_g = I(:,:,2);
@@ -57,8 +57,10 @@ parfor fr =1:no_frames
     pitchall = imdilate(pitchall,str);
     pitchall = imerode(pitchall,str);
         
-       
-    imwrite(not(pitchall),[root,'/mask/', num2str(fr) '.png']);
+     
+    masks(:,:,fr)= not(pitchall);
+    
+    %imwrite(not(pitchall),[root,'/mask/', num2str(fr) '.png']);
         
         
     pitchall(end,:) = 1;

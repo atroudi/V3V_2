@@ -60,10 +60,11 @@ function [lefts, rights, disparity] = stereoWarpK_noMotion_singleSided( imgs, im
     
     %x = A\b;
     %fprintf('\tConstructing preconditioner...\n');
-    M = ichol(A,struct('michol','on'));
+    %alpha = .1;
+    %M = ichol(A,struct('michol','on','diagcomp',alpha));
     %fprintf('\tOptimizing...\n\t');
     %tic
-    [x flag] = pcg(A,b,5e-1,150,M,M',disparity0(:)); %1-e6
+    [x flag] = pcg(A,b,5e-1,150,[],[],disparity0(:)); %1-e6
    %toc
 
     

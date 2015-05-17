@@ -7,18 +7,12 @@ H = size(Gx,1);
 W = size(Gx,2);
 
 
-%%%%% Gradient Refinement  %%%%%%%%%%%%%%%%%%%%%%
-
-Gx=Gx.*(1-1*exp(1-1./(alpha*abs(Gx)+eps))).* ((1-1*exp(1-1./(alpha*abs(Gx)+eps)))>0);
-Gy=Gy.*(1-1*exp(1-1./(alpha*abs(Gy)+eps))).* ((1-1*exp(1-1./(alpha*abs(Gy)+eps)))>0);
-
 %%%%% Boundary Cuts  %%%%%%%%%%%%%%%%%%%%%%
 
 boundary_query= imresize(boundary_query, size(Gx));
 
 boundary_query_obj=imfill(boundary_query,'holes') ;
-%boundary_query_obj=bwmorph(boundary_query_obj,'majority',10);
-%boundary_query_obj=imfill(boundary_query_obj,'holes') ;
+
 [boundary_query_modify, thresh] = edge(boundary_query_obj,'canny',[0.07    0.0808]);
 
 boundary_query= boundary_query_modify ;
@@ -47,8 +41,10 @@ end
 
 boundary_query=(boundary_query- cluster_bottom)>0;
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % computing divergence
+
 divGx = Gx(:,2:end) - Gx(:,1:end-1);
 divGy = Gy(2:end,:) - Gy(1:end-1,:);
 divGx = [Gx(:,1) divGx];
@@ -57,10 +53,11 @@ divG = divGx + divGy;
 
 
 % vector b
-b = divG(:);
-b_smooth= zeros(size(b,1),1);
+b = double(divG(:));
+%b_smooth= zeros(size(b,1),1);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % constructing sparse matrix A:
 
   % initialize
@@ -282,6 +279,9 @@ A = sparse(is(1:count),js(1:count),ss(1:count));
 
 
 %A_smooth = sparse(is_sm(1:count_sm),js_sm(1:count_sm),beta* ss_sm(1:count_sm)  );
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 x = A\b;   %possion_error= reshape((A*x-b),[H,W]);  % solve without smooth
 

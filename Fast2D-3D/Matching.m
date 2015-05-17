@@ -2,7 +2,7 @@
 function [I_Query_matched_rgb, Depth_Query]= Matching (Query,Query_rgb, Block_Discriptor_Query,Block_Discriptor_Dataset, Ref_depth_Dataset, Ref_rgb_Dataset, boundary_query, block_size, alpha, beta, Query_txt_name, Query_Path, grid_x)
 
 %%%%%% Gradient Extraction %%%%%%%%%%%%%%%%%%%%
-
+%{
 Gy_ref_database=zeros(size(Ref_depth_Dataset));
 Gx_ref_database=zeros(size(Ref_depth_Dataset));
 
@@ -16,7 +16,7 @@ for d=1:size(Ref_depth_Dataset,3)
     Gx_ref_database(:,:,d)= Gx_ref;
     
 end
-
+%}
 %%%%%%% Block Matching and Gradient Mapping %%%%%%%%%%%%%%%%%%%%%%%%
 
 Matches=ones(size(grid_x,1),size(grid_x,2),3);
@@ -33,7 +33,7 @@ temp=gpuArray(ones(size(Block_Discriptor_Dataset,1),1));
 
 for i=1:size(Block_Discriptor_Query,1)
     
-        Block(:,:,1)=temp * g_Block_Discriptor_Query(i,:);
+        Block(:,:,1)=temp * single(g_Block_Discriptor_Query(i,:));
         
         for j=2:size(Block_Discriptor_Query,3)
              Block(:,:,j)= Block(:,:,1);
@@ -51,7 +51,6 @@ for i=1:size(Block_Discriptor_Query,1)
         c_index=(index-r_index)/size(Matches,1)+1;
     
         Matches(r,c,1:3)= [r_index  c_index ceil(index/(size(Matches,1)*size(Matches,2)))];
-
         %I_Query_matched_rgb((r-1)*block_size+1:r*block_size , (c-1)*block_size+1:c*block_size, : )= Ref_rgb_Dataset( (Matches(r,c,1)-1)*block_size+1:Matches(r,c,1)*block_size , (Matches(r,c,2)-1)*block_size+1:Matches(r,c,2)*block_size,:,Matches(r,c,3));
         Gy_Query( (r-1)*block_size+1:r*block_size, (c-1)*block_size+1:c*block_size)=  Gy_ref_database((Matches(r,c,1)-1)*block_size+1:Matches(r,c,1)*block_size , (Matches(r,c,2)-1)*block_size+1:Matches(r,c,2)*block_size, Matches(r,c,3));
         Gx_Query( (r-1)*block_size+1:r*block_size, (c-1)*block_size+1:c*block_size)=  Gx_ref_database((Matches(r,c,1)-1)*block_size+1:Matches(r,c,1)*block_size , (Matches(r,c,2)-1)*block_size+1:Matches(r,c,2)*block_size, Matches(r,c,3));
