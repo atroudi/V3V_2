@@ -51,6 +51,7 @@ for i=1:size(Block_Discriptor_Query,1)
         c_index=(index-r_index)/size(Matches,1)+1;
     
         Matches(r,c,1:3)= [r_index  c_index ceil(index/(size(Matches,1)*size(Matches,2)))];
+
         %I_Query_matched_rgb((r-1)*block_size+1:r*block_size , (c-1)*block_size+1:c*block_size, : )= Ref_rgb_Dataset( (Matches(r,c,1)-1)*block_size+1:Matches(r,c,1)*block_size , (Matches(r,c,2)-1)*block_size+1:Matches(r,c,2)*block_size,:,Matches(r,c,3));
         Gy_Query( (r-1)*block_size+1:r*block_size, (c-1)*block_size+1:c*block_size)=  Gy_ref_database((Matches(r,c,1)-1)*block_size+1:Matches(r,c,1)*block_size , (Matches(r,c,2)-1)*block_size+1:Matches(r,c,2)*block_size, Matches(r,c,3));
         Gx_Query( (r-1)*block_size+1:r*block_size, (c-1)*block_size+1:c*block_size)=  Gx_ref_database((Matches(r,c,1)-1)*block_size+1:Matches(r,c,1)*block_size , (Matches(r,c,2)-1)*block_size+1:Matches(r,c,2)*block_size, Matches(r,c,3));

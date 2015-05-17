@@ -128,38 +128,41 @@ end
     %I= gpuArray(zeros(size(Ref_Path,1),1));
     %temp= gpuArray(ones(size(Dataset_GIST,1),1));
     
-    for R_ref=1:size(I)
-      [C,I(R_ref)]=min(sum((Dataset_GIST(:,:,R_ref)- temp*ImageDescriptor).^2,2));
+    for R_ref=1:length(I)
+      [C(R_ref),I(R_ref)]=min(sum((Dataset_GIST(:,:,R_ref)- temp*ImageDescriptor).^2,2));
     end
     
-    [B,IDX]=sort(I);
+    [B,IDX]=sort(C);
     
     I=gather(I);
     IDX=gather(IDX);
-    
-    Ref_rgb_Dataset= zeros(size(Query,1), size(Query,2),3,k); 
-    Ref_depth_Dataset= zeros(size(Query,1), size(Query,2),k); 
+   
+    Ref_rgb_Dataset= uint8(zeros(size(Query,1), size(Query,2),3,k)); 
+    Ref_depth_Dataset= uint8(zeros(size(Query,1), size(Query,2),k)); 
     
     i=1;
-    while i<=k
-        N_ref = dir([deblank(Ref_Path(IDX(i),:)),'/*_int.txt']);   
+    j=1;
+
+    while i<=k && j<=length(IDX)
+        
+        N_ref = dir([deblank(Ref_Path(IDX(j),:)),'/*_int.txt']);   
         N_ref= char(N_ref.name); N_deblank=deblank(N_ref);
         
-        fid1= fopen([deblank(Ref_Path(IDX(i),:)),'/',N_deblank(I(IDX(i)),1:end-8),'.png']); 
-        fid2= fopen([deblank(Ref_Path(IDX(i),:)),'/',N_deblank(I(IDX(i)),1:end-8),'_d.png']);
+        fid1= fopen([deblank(Ref_Path(IDX(j),:)),'/',N_deblank(I(IDX(j)),1:end-8),'.png']); 
+        fid2= fopen([deblank(Ref_Path(IDX(j),:)),'/',N_deblank(I(IDX(j)),1:end-8),'_d.png']);
         
         
         if fid1~=-1 && fid2~=-1
   
-          Ref_rgb_Dataset(:,:,:,i)= imresize(imread([deblank(Ref_Path(IDX(i),:)),'/',N_deblank(I(IDX(i)),1:end-8),'.png']),[size(Query,1) size(Query,2)]); 
-          Ref_depth_Dataset(:,:,i)= imresize(rgb2gray(imread([deblank(Ref_Path(IDX(i),:)),'/',N_deblank(I(IDX(i)),1:end-8),'_d.png'])),[size(Query,1) size(Query,2)]);
-          
+          Ref_rgb_Dataset(:,:,:,i)= imresize(imread([deblank(Ref_Path(IDX(j),:)),'/',N_deblank(I(IDX(j)),1:end-8),'.png']),[size(Query,1) size(Query,2)]); 
+          Ref_depth_Dataset(:,:,i)= imresize(rgb2gray(imread([deblank(Ref_Path(IDX(j),:)),'/',N_deblank(I(IDX(j)),1:end-8),'_d.png'])),[size(Query,1) size(Query,2)]);
           if sum(sum(Ref_depth_Dataset(:,:,i)>50))
               i=i+1;
           end
           
         end
-          
+         
+        j=j+1;
       fclose('all');
     end
   
@@ -201,7 +204,6 @@ end
              
             Ref_rgb=Ref_rgb_Dataset(:,:,:,Ref_no);
             Ref_depth=Ref_depth_Dataset(:,:,Ref_no);
-
             Ref=rgb2gray(Ref_rgb);
 
             H= size(Ref,1);
@@ -224,7 +226,6 @@ end
             Block_Discriptor_Dataset(:,:,Ref_no)= Block_Discriptor_Ref;
    
      end    
- 
  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [I_Query_matched_rgb, Depth_Query]= Matching (Query,Query_rgb, Block_Discriptor_Query,Block_Discriptor_Dataset, Ref_depth_Dataset, Ref_rgb_Dataset, boundary_query, block_size, alpha, beta, Query_txt_name, Query_Path,grid_x);
@@ -250,9 +251,9 @@ end
 
 %stereo= uint8([Query_rgb_original   Depth_Query_rgb]);
 tic
-stereo = 255*WarpFinal(im2double(Query_rgb_original),im2double(Depth_Query),max_disp,resize_factor,Gx, Gy, xx, yy, YY);
+%stereo = 255*WarpFinal(im2double(Query_rgb_original),im2double(Depth_Query),max_disp,resize_factor,Gx, Gy, xx, yy, YY);
 toc
-%stereo=Depth_Query;
+stereo=Depth_Query;
 
     %end
 %end
