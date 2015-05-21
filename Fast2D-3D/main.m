@@ -140,15 +140,16 @@ end
 
 %%%% Load database %%%%%%%%%%%%%%%%%%%%%%%%%%
 
- %load('Dataset_GIST.mat','Dataset_GIST');
+ load('Dataset_GIST.mat','Dataset_GIST');
  load('Dataset_Gx.mat','Dataset_Gx');
  load('Dataset_Gy.mat','Dataset_Gy');
- %load('Dataset_SIFT.mat','Dataset_SIFT');
+ load('Dataset_SIFT.mat','Dataset_SIFT');
 
-%Dataset_GIST= gpuArray(uint8(Dataset_GIST));
-%Dataset_SIFT= gpuArray(uint8(Dataset_SIFT));
-%Block_Discriptor_Dataset=gpuArray(single(uint8(zeros(size(Dataset_SIFT,2),size(Dataset_SIFT,4),p.k))));
-%ind= gpuArray(ones(1,size(Ref_Path,1)));
+ 
+Dataset_GIST= (uint8(Dataset_GIST));
+Dataset_SIFT= (uint8(Dataset_SIFT));
+Block_Discriptor_Dataset=(single(uint8(zeros(size(Dataset_SIFT,2),size(Dataset_SIFT,4),p.k))));
+ind= (ones(1,size(Ref_Path,1)));
 
 %%%% For Each Video %%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -163,15 +164,16 @@ for Query_Path_idx=1:size(Query_Paths,1)
     
     frames_processed=0;
     
+    I_original = imread([Query_Path, num2str(frames_processed+1), '.png']);
+    [vres_original, hres_original, u] = size(I_original); 
+    [Gx, Gy, xx, yy, YY] = GetGxGy(vres_original,hres_original/2,p.resize_factor);
+    
+    
     while frames_processed< Number_of_Frames_folder
         
         Number_of_Frames= min(Number_of_Frames_folder-frames_processed,250);% 10 sec
         
-        % read all frames
-       I_original = imread([Query_Path, num2str(frames_processed+1), '.png']);
-       [vres_original, hres_original, u] = size(I_original); 
-
-       
+        % read all frames     
        Query_rgb_original_all= uint8(zeros(vres_original, hres_original, u,Number_of_Frames));
        
        
@@ -179,7 +181,7 @@ for Query_Path_idx=1:size(Query_Paths,1)
            Query_rgb_original_all(:,:,:,Query_no)= imread([Query_Path, num2str(frames_processed+Query_no),'.png']);
        end
            
-       
+       %{
         % reset gpu
         if mod(frames_processed, 750)==0
             reset(gpuDevice)
@@ -194,7 +196,7 @@ for Query_Path_idx=1:size(Query_Paths,1)
             yy = gpuArray(yy);
             YY = gpuArray(YY);
         end
-       
+      %} 
 tic    
     %%%% Cassification   %%%%%%%
     
@@ -204,12 +206,13 @@ tic
 %tic 
     Query_fr= 1:Number_of_Frames;
     
-    Query_no_long_short= Query_fr(logical(CLASS==1 | CLASS==3));
-    Query_no_medium_short= Query_fr(logical(CLASS==2 | CLASS==3));
+    %Query_no_long_short= Query_fr(logical(CLASS==1 | CLASS==3));
+    %Query_no_medium_short= Query_fr(logical(CLASS==2 | CLASS==3));
     Query_no_long= Query_fr(logical(CLASS==1));
     Query_no_medium= Query_fr(logical(CLASS==2));
     Query_no_short= Query_fr(logical(CLASS==3));
     
+    %{
     %medium_ratio = Number_of_Frames/size(Query_no_medium,2);
     medium_ratio = Number_of_Frames/size(Query_no_medium_short,2);
     Frames = zeros(1,Number_of_Frames);
@@ -235,24 +238,25 @@ tic
             j=j+1;
         end
     end
+    %}
 %toc
 %tic 
     parfor Query_no=1:Number_of_Frames
       
        
-          Query_rgb_original=Query_rgb_original_all_new(:,:,:,Query_no);
+          Query_rgb_original=Query_rgb_original_all(:,:,:,Query_no);
           Query_rgb_original= imresize(Query_rgb_original,[size(Query_rgb_original,1) size(Query_rgb_original,2)/2]); % Half the Width
           
           
-          if CLASS_new(Query_no)==1 %% Long    
+          if CLASS(Query_no)==1 %% Long    
               stereo= tilt(Query_rgb_original, p.max_disp);
           
-          elseif CLASS_new(Query_no)==2 %% Medium     
-              stereo= DGC(Query_rgb_original, mask_new(:,:,Query_no), param, p, Dataset_GIST,Ref_Path,ind,Gx, Gy, xx, yy, YY,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset);
+          elseif CLASS(Query_no)==2 %% Medium     
+              stereo= DGC(Query_rgb_original, mask(:,:,Query_no), param, p, Dataset_GIST,Ref_Path,ind,Gx, Gy, xx, yy, YY,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset);
               
-          elseif CLASS_new(Query_no)==3 %% Short
+          elseif CLASS(Query_no)==3 %% Short
               %stereo= [Query_rgb_original Query_rgb_original]; % do nothing
-              stereo= DGC(Query_rgb_original, mask_new(:,:,Query_no), param, p, Dataset_GIST,Ref_Path,ind,Gx, Gy, xx, yy, YY,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset); 
+              stereo= DGC(Query_rgb_original, mask(:,:,Query_no), param, p, Dataset_GIST,Ref_Path,ind,Gx, Gy, xx, yy, YY,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset); 
           end
           
         
@@ -265,7 +269,7 @@ run_time=toc;
     % write results
     parfor Query_no=1:Number_of_Frames
            Stereo=stereo_all(:,:,:,Query_no);
-           imwrite(uint8(Stereo), [Output_Path,num2str(frames_processed+Frames(Query_no)),'.png'],'png');
+           imwrite(uint8(Stereo), [Output_Path,num2str(frames_processed+Query_no),'.png'],'png');
     end
     
     clear stereo_all
@@ -282,4 +286,4 @@ run_time=toc;
 end
     
 delete(poolobj)
-reset(gpuDevice)
+%reset(gpuDevice)
