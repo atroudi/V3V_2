@@ -20,10 +20,11 @@ D = imresize(D,[size(I,1) size(I,2)]);
 [lefts, rights, disparity] = stereoWarpK_noMotion_singleSided(I, RAW, D, Gx,Gy, Thresh,R,xx,yy,YY);
 
 %%%Creat Side by Side
-[vres hres u] = size(lefts);
-SS = zeros(vres,hres*2,3);
-SS(:,1:hres,:) = lefts;
-SS(:,hres+1:end,:) = rights;
+[vres, hres, u] = size(lefts);
+%SS = zeros(vres,hres*2,3);
+%SS(:,1:hres,:) = lefts;
+%SS(:,hres+1:end,:) = rights;
 
-
+ SS=[lefts(:,Thresh:end,:) rights(:,Thresh:end,:)];
+ SS= imresize(SS,[vres 2*hres]);
 

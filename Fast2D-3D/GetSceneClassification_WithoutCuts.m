@@ -1,4 +1,4 @@
-function [CLASS,vres_original, hres_original, masks] = GetSceneClassification_WithoutCuts(rootin,root,no_frames,resize_factor,frames_processed)
+function [CLASS, masks] = GetSceneClassification_WithoutCuts(Query_rgb_original, rootin,root,no_frames,resize_factor,frames_processed)
 
 %%A function to classify scenes 
 
@@ -28,21 +28,22 @@ GMM_threshold = -20;
 
 CLASS = uint8(nan(1,numel(no_frames)));
 
-I = imread([rootin, num2str(frames_processed+1), '.png']);
-[vres_original, hres_original, u] = size(I);
-I = double(imresize(I,resize_factor));
-[vres, hres, u] = size(I);
+
+vres= ceil(size(Query_rgb_original,1)*resize_factor);
+hres= ceil(size(Query_rgb_original,2)*resize_factor);
 num_pels = vres*hres;
 
 masks= false(vres, hres, no_frames);
+
 
 parfor fr =1:no_frames
   
     imfill_sum = 0;
     green_sum = 0;
   
-    I = double(imresize(imread([rootin num2str(frames_processed+fr) '.png']),resize_factor));
-
+    I = Query_rgb_original(:,:,:,fr);
+    I = double(imresize(I,resize_factor));
+    
     I_r = I(:,:,1);
     I_g = I(:,:,2);
     I_b = I(:,:,3);

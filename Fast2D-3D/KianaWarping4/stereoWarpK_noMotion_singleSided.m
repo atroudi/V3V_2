@@ -35,7 +35,7 @@ function [lefts, rights, disparity] = stereoWarpK_noMotion_singleSided( imgs, im
 %     depths(depths>highprc) = highprc;
     
     %One heuristic for converting depth to disparity
-    disparity0 = imnormalize(1./(1+imnormalize(depths))).*displevels - displevels/2;
+    disparity0 = imnormalize(1./(1+imnormalize(depths))).*displevels ;%- displevels/2;
 %     [Gx, Gy] = getVideoGradients_noMotion(flows);
 %     F = -(Gt-spdiags(diag(Gt),0,N,N)); %Linear optical flow operator
 %     absFlowErr = abs(imfilter(reshape((F*grs(:)-grs(:)),[h,w,1,K]), fspecial('gaussian',[5,5],1)));
@@ -67,7 +67,7 @@ function [lefts, rights, disparity] = stereoWarpK_noMotion_singleSided( imgs, im
     [x flag] = pcg(A,b,5e-1,150,[],[],disparity0(:)); %1-e6
    %toc
 
-    
+    %x=disparity0(:);
     
     disparity = reshape(x,[h,w,1,K]);
     %warpleft = disparity./2;
