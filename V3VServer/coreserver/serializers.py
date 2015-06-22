@@ -1,0 +1,19 @@
+'''
+Created on Jun 22, 2015
+
+@author: qcriadmin
+'''
+
+from rest_framework import serializers
+from coreserver.models import Segment2D,Account
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ('id', 'name')
+
+class Segment2DSerializer(serializers.ModelSerializer):
+    account=AccountSerializer()
+    class Meta:
+        model = Segment2D
+        fields = ('name','account')

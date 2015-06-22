@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Account(models.Model):
+    id=models.IntegerField(primary_key=True)
     created = models.DateTimeField(auto_now_add=True, null=False)
     name=models.CharField(max_length=255, null=False)
     license_type=models.CharField(max_length=255)
