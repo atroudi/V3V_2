@@ -13,6 +13,7 @@ class AccountSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 class Segment2DSerializer(serializers.ModelSerializer):
+    #segment2D=serializers.FileField(required=False) 
     account=AccountSerializer()
     class Meta:
         model = Segment2D

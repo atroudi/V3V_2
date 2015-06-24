@@ -12,7 +12,7 @@ segment2D_list = Segment2DViewSet.as_view({
 })
 segment2D_detail = Segment2DViewSet.as_view({
     'get': 'retrieve',
-    'put': 'update',
+    'put': 'update'
 })
 
 urlpatterns = [
