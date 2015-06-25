@@ -15,6 +15,10 @@ class AccountSerializer(serializers.ModelSerializer):
 class Segment2DSerializer(serializers.ModelSerializer):
     #segment2D=serializers.FileField(required=False) 
     account=AccountSerializer()
+    def create(self, validated_data):
+        return serializers.ModelSerializer.create(self, validated_data)
+    
     class Meta:
         model = Segment2D
         fields = ('name','account')
+    
