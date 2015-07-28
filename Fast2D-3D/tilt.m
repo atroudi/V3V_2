@@ -32,13 +32,14 @@ for row=1:H
     end
     %}
     
-    left= image;
+    
     %left(row,1:end-round(disp_per_row*(H-row)),:)= image(row,round(disp_per_row*(H-row))+1:end,:); 
     right(row,round(disp_per_row*(H-row))+1:end,:)= image(row,1:end-round(disp_per_row*(H-row)),:);
 
 end
 
-
+left= image;
+right= imresize(right,1/4); right= imresize(right,4); % to smooth it down
 
 stereo=[left(:,max_disp:end,:) right(:,max_disp:end,:)];
 stereo= imresize(stereo,[size(image,1) 2*size(image,2)]);

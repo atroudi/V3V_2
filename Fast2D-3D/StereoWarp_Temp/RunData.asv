@@ -1,0 +1,51 @@
+function RunData(rgb_rootin,d_rootin,ST,ENDI,R,temp_wind,Thresh)
+
+%rgb_rootin: RGB
+%d_rootin: Depth
+%ST: sequence start frame
+%ENDI: sequence end frame
+%R: resize factor...i.e. 0.25
+%temp_wind: temporal smoothness window...if temp_wind = 2 , then images are
+%I_1,I_2,I_3 
+%I_3,I_4,I_5 
+%I_5,I_6,I_7 
+%Thresh: Disparity range...we always set to 20
+
+I = double(imread([rgb_rootin num2str(ST) '.png']));
+[vres hres u] = size(I);
+
+NO_FRAMES = ENDI - ST + 1; %% total number of frames in the sequence
+no_frames = temp_wind+1; %% per temporal window, for creating imgs and depths
+
+
+st_all = [ST:temp_wind:ENDI-temp_wind];
+
+K = 0;
+for FR = ST:ENDI,
+    
+    K = K + 1;
+    
+    imgs = zeros(vres,hres,u,no_frames);
+    depths = zeros(vres,hres,1,no_frames);
+    
+    st = st_all(K);
+    endi = st + temp_wind;
+    
+    k = 0;
+    for fr = st:endi,
+        
+        k = k + 1;
+        
+        imgs(:,:,:,k) = double(imread([rgb_rootin num2str(fr) '.png']));
+        d = double(imread([d_rootin num2str(fr) '.png']));
+        depths(:,:,:,k) = d(:,:,1);
+    end
+    
+    SS = Warp_temp_test(imgs,depths,Thresh,R);
+    
+    fo
+    
+end
+
+
+

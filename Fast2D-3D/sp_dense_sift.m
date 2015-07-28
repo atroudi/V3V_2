@@ -121,8 +121,11 @@ clear I_orientation
 
 ct       = .000001;
 sift_arr = sift_arr + ct;
-tmp      = sqrt(sum(sift_arr.^2, 3));
-sift_arr = sift_arr ./ repmat(tmp, [1 1 size(sift_arr,3)]);
+
+% I moved this normalization part outside
+
+%tmp      = sqrt(sum(sift_arr.^2, 3));
+%sift_arr = sift_arr ./ repmat(tmp, [1 1 size(sift_arr,3)]);
 
 function [GX,GY]=gen_dgauss(sigma)
 

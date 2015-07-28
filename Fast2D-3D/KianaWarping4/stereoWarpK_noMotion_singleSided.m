@@ -91,7 +91,7 @@ function [lefts, rights, disparity] = stereoWarpK_noMotion_singleSided( imgs, im
     warpright = imresize(warpright,[size(imgs_RAW,1) size(imgs_RAW,2)]);
     %rights = clip(warpImage_v2(imgs_RAW, warpright,R,xx,yy,YY));
    
-    rights = gather(clip(warpImage_v2((imgs_RAW), (warpright), R, xx, yy, YY)));
+    rights = clip(warpImage_v2((imgs_RAW), (warpright), R, xx, yy, YY));
 %toc    
 %     for i=1:K
 %         lefts(:,:,:,i) = clip(warpImage(warpleft(:,:,:,i), imgs(:,:,:,i), zeros(h,w)));
