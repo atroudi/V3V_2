@@ -1,4 +1,4 @@
-function [CLASS, masks] = GetSceneClassification_WithoutCuts(Query_rgb_original, rootin,root,no_frames,resize_factor,frames_processed)
+function [CLASS, masks] = GetSceneClassification_WithoutCuts(Query_rgb_original,root,resize_factor)
 
 %%A function to classify scenes 
 
@@ -20,6 +20,7 @@ green_closeup = 0.4;       %%green_percentage thershold for closeups
 
 %root = 'F:\SoccerFull\H1\TestX\';   %%rootin from TrainPitchModel.m
 %global optmixture;
+no_frames = size(Query_rgb_original,4);
 
 optmixture_all=load([root '/LinePitchModel.mat']);
 optmixture=optmixture_all.optmixture;

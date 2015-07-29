@@ -1,5 +1,5 @@
 
-function Depth_Query = DGC(Query_rgb_original, mask, p, Dataset_Fm,Ref_Path,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset)
+function Depth_Query = DGC(Query_rgb_original, mask, p, Dataset_Fm,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset)
 
 
     % Parameters
@@ -63,7 +63,7 @@ function Depth_Query = DGC(Query_rgb_original, mask, p, Dataset_Fm,Ref_Path,Data
      Difference = reshape(Difference,[],size(Ref_Path,1));%
     
      [C,I] = min(Difference,[],1);%
-     [B,IDX] = sort(C);%
+     [B,IDX] = sort(C);
 
     
      KNN_Gx = int8(nan(size(Dataset_Gx,3),size(Dataset_Gx,4),k));
@@ -106,9 +106,17 @@ function Depth_Query = DGC(Query_rgb_original, mask, p, Dataset_Fm,Ref_Path,Data
         Gy_Query( (r-1)*block_size+1:r*block_size, (c-1)*block_size+1:c*block_size) =  KNN_Gy((r_match-1)*block_size+1:r_match*block_size , (c_match-1)*block_size+1:c_match*block_size, f_match);
         Gx_Query( (r-1)*block_size+1:r*block_size, (c-1)*block_size+1:c*block_size) =  KNN_Gx((r_match-1)*block_size+1:r_match*block_size , (c_match-1)*block_size+1:c_match*block_size, f_match);
     
-      end
+     end
      
+     %%%%%%%%%%%%%%%%  Just for test document %%%%%%%%%%%%%%%%%%
+     %{
+     dlmwrite('/Users/kiana/Dropbox (QCRI-DS)/2D-3D/Testing/Depth Gradient Estimator/Gx/8.txt',Gx_Query)
+     dlmwrite('/Users/kiana/Dropbox (QCRI-DS)/2D-3D/Testing/Depth Gradient Estimator/Gy/8.txt',Gy_Query)
+     %}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+      
 %Matching=toc
+
 
    %%%%% Poisson Reconstruction  %%%%%%%%%%%%%%%%%%%%%%
    

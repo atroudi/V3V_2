@@ -8,7 +8,7 @@ warning('off','all')
 
 change = 0; % if there was any change in the Database , block_size, resize_factor or Fm.
 
-Query_Paths = ['Data_Size_Seq/';];
+Query_Paths = '/Users/kiana/Dropbox (QCRI-DS)/2D-3D/Testing/Depth Gradient Estimator/left_view images/' ;%['Data_Size_Seq_/';];
 Ref_Path =    ['Database/Run1         ';'Database/Run2         ';'Database/Run3         ';'Database/Run4         ';'Database/Run5         ';'Database/Run6         ';'Database/Run-game1    ';'Database/Run-game2    ';'Database/Run-game4    ';'Database/Run-game5    ';'Database/Run-game7    ';'Database/Run-game9    ';'Database/Run-game10   ';'Database/V1S4         ';'Database/V1S4-1       ';'Database/V1S4-2       ';'Database/V1S7         ';'Database/V1S7-1       ';'Database/V1S7-2       ';'Database/V1S8         ';'Database/V1S8-1       ';'Database/V1S8-2       ';'Database/V1S10        ';'Database/V1S10-1      ';'Database/V1S10-2      ';'Database/V1S15-1      ';'Database/V1S15-2      ';'Database/V1S16-1      ';'Database/V1S16-2      ';'Database/V1S18-1      ';'Database/V1S18-2      ';'Database/V2S6-1       ';'Database/V2S13-1      ';'Database/V2S23-1      ';'Database/V4S3-1       ';'Database/V4S5-1       ';'Database/V4S5-2       ';'Database/V4S9-1       ';'Database/V4S10-1      ';'Database/V4S10-2      '];
 
 Output_Path = [Query_Paths,'Output/'];
@@ -143,6 +143,22 @@ if change
 
     end
     
+    %%%%%%%%%%%%%%%%  Just for test document %%%%%%%%%%%%%%%%%%
+    %{
+    Dataset_SIFT=permute(Dataset_SIFT,[1 3 2 4]);
+    Dataset_SIFT = reshape(Dataset_SIFT,[],size(Dataset_SIFT,3),size(Dataset_SIFT,4));
+    size(Dataset_SIFT)
+    Dataset_Fm = permute(Dataset_Fm,[2 3 1]);
+    Dataset_Fm = reshape(Dataset_Fm,[],size(Dataset_Fm,3));
+    Dataset_Fm=permute(Dataset_Fm,[2 1]);
+    size(Dataset_Fm)
+    Dataset_Gx = reshape(Dataset_Gx,[],size(Dataset_Gx,3),size(Dataset_Gx,4));
+    size(Dataset_Gx)
+    Dataset_Gy = reshape(Dataset_Gy,[],size(Dataset_Gy,3),size(Dataset_Gy,4));
+    size(Dataset_Gy)
+    %}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     switch p.resize_factor
         
         case 1/4
@@ -165,7 +181,6 @@ if change
     end
     
 end
-
 
 
 %%%% Load database %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -241,7 +256,7 @@ for Query_Path_idx = 1:size(Query_Paths,1)
 tic    
     %%%% Cassification   %%%%%%%
     
-    [CLASS, mask] = GetSceneClassification_WithoutCuts(Query_rgb_original_all, Query_Path,pwd,Number_of_Frames,p.resize_factor* p.mask_resize_factor,frames_processed);
+    [CLASS, mask] = GetSceneClassification_WithoutCuts(Query_rgb_original_all,pwd,p.resize_factor* p.mask_resize_factor);
 
     [CLASS, last_count, last_class] = CleanClass(Query_rgb_original_all,CLASS,pre_count, pre_class);
     
@@ -271,7 +286,7 @@ tic
               depth_all(:,:,:,Query_no) = zeros(d_vres,d_hres);
           
           elseif CLASS(Query_no) == 2 %% Medium     
-              depth = DGC(Query_rgb_original, mask(:,:,Query_no), p, Dataset_Fm,Ref_Path,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset);
+              depth = DGC(Query_rgb_original, mask(:,:,Query_no), p, Dataset_Fm,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset);
               depth_all(:,:,:,Query_no) = depth;
               if p.temporal_window == 1
                   stereo_all(:,:,:,Query_no) = 255*WarpFinal(im2double(Query_rgb_original),im2double(depth),p.max_disp,p.resize_factor,Gx, Gy, xx, yy, YY);
