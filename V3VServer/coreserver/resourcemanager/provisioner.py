@@ -13,15 +13,11 @@ class AbstractProvisioner(object):
     '''
     __metaclass__ = ABCMeta
 
-    def __init__(self, params):
-        '''
-        Constructor
-        '''
-    
-    def provision(self,instances):
+    @classmethod   
+    def provision(cls,instances):
         pass
     
-    
-    def deprovision(self, instances):
+    @classmethod
+    def deprovision(cls, instances):
         pass
         

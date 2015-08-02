@@ -35,14 +35,14 @@ class SimpleClient(object):
         
     @classmethod
     def upload_segment(cls):
-        files={'file':open('/home/qcriadmin/workspace/V3V/V3VServer/clip.mp4','rb')}
+        files={'file':open('/home/qcriadmin/workspace/V3V/V3VServer/out.mp4','rb')}
         url="http://127.0.0.1:8000/api/segment2D/1/"
         response=requests.put(url,files=files)
         print(response.json())
         
 if __name__ == '__main__':
-    #SimpleClient.check_status()
-    SimpleClient.upload_segment()
+    SimpleClient.check_status()
+    #SimpleClient.upload_segment()
 #     ssh=pysftp.Connection(host='10.2.0.124',username='qcri',password='1qaz2wsx')
 #     file=ssh.open('/home/qcri/hello.txt');
 #     for line in file:

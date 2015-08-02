@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from django.http.response import HttpResponse
 from django.core.servers.basehttp import FileWrapper
 
-from coreserver.models import Segment2D,Segment3D,Instance,Conversion
+from coreserver.models import Segment2D,Segment3D,Instance,Conversion_task
 from coreserver.serializers import Segment2DSerializer
 from coreserver.controller.servicecontroller import ServiceController
 from coreserver.videoprocessers.simplevideoprocessor import SimpleVideoProcessor
@@ -40,9 +40,13 @@ class Segment2DViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND) #segment ID not found
         try:
             inp_file = request.data['file']
-            new_file_path="input_segments/" + pk.__str__() + ".mp4" #TODO extension should not hardcoded
+            filename_tokens = inp_file.__str__().split('.')
+            if len(filename_tokens) <= 1: #no extension in the file name
+                extension=""
+            else:
+                extension = filename_tokens[len(filename_tokens)-1]
+            new_file_path = "/home/qcriadmin/workspace/V3V/V3VServer/input_segments/"+ pk.__str__() + "." + extension #TODO extension should not hardcoded
             new_file = open(new_file_path,"wb")
-            
             # download the binary file sent in the request
             while 1:
                 byte = inp_file.read(1)
@@ -54,6 +58,7 @@ class Segment2DViewSet(viewsets.ModelViewSet):
             segment2D.instance = localhost_instance
             segment2D.location = new_file_path
             
+            ## TODO
             # get the met data of the video from the video container
             segment2D = SimpleVideoProcessor.update_meta_data(new_file_path, segment2D)
             segment2D.save()
@@ -73,9 +78,9 @@ class Segment2DViewSet(viewsets.ModelViewSet):
         except:
             return Response(status=status.HTTP_404_NOT_FOUND) #segment ID not found
         try:
-            segment3D = Conversion.objects.get(segment2D=segment2D).segment3D
+            segment3D = Conversion_task.objects.get(segment2D=segment2D).segment3D
             if(segment2D.instance and segment2D.location):
-                instance = segment2D.instance
+                instance = segment3D.instance
                 file_path = segment3D.location
                 ssh=pysftp.Connection(host=instance.ipaddress,username=instance.username,password=instance.password)
                 file=ssh.open(file_path);

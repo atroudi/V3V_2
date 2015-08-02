@@ -23,7 +23,11 @@ class Instance(models.Model):
     speed_per_core = models.IntegerField(default=0)
     price = models.IntegerField(default=0)
     status = models.CharField(max_length=255) #running, stopped, terminated
+    executable_path = models.CharField(max_length=255)
+    output_path = models.CharField(max_length=255)
+    input_path = models.CharField(max_length=255)
     cloud_provider = models.ForeignKey(CloudProvider)
+    
     class Meta:
         db_table = "instance"
 
@@ -40,6 +44,7 @@ class Segment2D(models.Model):
     id=models.AutoField(primary_key=True)
     created = models.DateTimeField(auto_now_add=True, null=False)
     name=models.CharField(max_length=255, null=False)
+    profile=models.IntegerField(null=True,default=1)
     category=models.CharField(max_length=255, null=True)
     duration=models.IntegerField(null=True)
     frame_rate=models.IntegerField(null=True)
@@ -68,8 +73,8 @@ class Segment3D(models.Model):
     instance=ForeignKey(Instance)
     class Meta:
         db_table = "segment3D"
-    
-class Conversion(models.Model):
+
+class Conversion_task(models.Model):
     id=models.AutoField(primary_key=True)
     created=models.DateTimeField(auto_now_add=True)
     status=models.CharField(max_length=255, null=False)
@@ -79,9 +84,22 @@ class Conversion(models.Model):
     # Relationships
     instances=models.ManyToManyField(Instance)
     segment2D=models.OneToOneField(Segment2D)
-    segment2D=models.OneToOneField(Segment3D)
+    segment3D=models.OneToOneField(Segment3D)
     class Meta:
-        db_table = "conversion"
+        db_table = "conversion_task"
+# class Conversion(models.Model):
+#     id=models.AutoField(primary_key=True)
+#     created=models.DateTimeField(auto_now_add=True)
+#     status=models.CharField(max_length=255, null=False)
+#     description=models.TextField()
+#     exec_started=models.DateTimeField()
+#     exec_ended=models.DateTimeField()
+#     # Relationships
+#     instances=models.ManyToManyField(Instance)
+#     segment2D=models.OneToOneField(Segment2D)
+#     segment3D=models.OneToOneField(Segment3D)
+#     class Meta:
+#         db_table = "conversion"
     
 class Conversion_setting(models.Model):
     id=models.AutoField(primary_key=True)
@@ -90,7 +108,7 @@ class Conversion_setting(models.Model):
     value=models.CharField(max_length=255)
     description=models.TextField()
     # Relationships
-    conversion=models.ForeignKey(Conversion)
+    conversion=models.ForeignKey(Conversion_task)
     class Meta:
         db_table = "conversion_setting"
     

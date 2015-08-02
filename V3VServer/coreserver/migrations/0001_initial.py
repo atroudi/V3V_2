@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Account',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('name', models.CharField(max_length=255)),
                 ('license_type', models.CharField(max_length=255)),
@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CloudProvider',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('name', models.CharField(max_length=255)),
                 ('provisioner_modulename', models.CharField(max_length=255)),
                 ('provisioner_classname', models.CharField(max_length=255)),
@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Conversion',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('status', models.CharField(max_length=255)),
                 ('description', models.TextField()),
@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Conversion_setting',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('name', models.CharField(max_length=255)),
                 ('value', models.CharField(max_length=255)),
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Instance',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('ipaddress', models.CharField(max_length=255)),
                 ('dns', models.CharField(max_length=255)),
                 ('username', models.CharField(max_length=255)),
@@ -88,10 +88,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Segment2D',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('name', models.CharField(max_length=255)),
-                ('category', models.CharField(null=True, max_length=255)),
+                ('category', models.CharField(max_length=255, null=True)),
                 ('duration', models.IntegerField(null=True)),
                 ('frame_rate', models.IntegerField(null=True)),
                 ('location', models.CharField(max_length=255)),
@@ -108,7 +108,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Segment3D',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
+                ('id', models.AutoField(serialize=False, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('name', models.CharField(max_length=255)),
                 ('category', models.CharField(max_length=255)),
@@ -132,6 +132,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='conversion',
             name='segment2D',
+            field=models.OneToOneField(to='coreserver.Segment2D'),
+        ),
+        migrations.AddField(
+            model_name='conversion',
+            name='segment3D',
             field=models.OneToOneField(to='coreserver.Segment3D'),
         ),
     ]

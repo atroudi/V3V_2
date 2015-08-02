@@ -8,7 +8,8 @@ from coreserver import views
 from coreserver.views import Segment2DViewSet
 
 segment2D_list = Segment2DViewSet.as_view({
-    'post': 'create'
+    'post': 'create',
+    #'put':'update'
 })
 segment2D_detail = Segment2DViewSet.as_view({
     'get': 'retrieve',
