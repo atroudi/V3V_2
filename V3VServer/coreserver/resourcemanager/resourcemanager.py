@@ -6,7 +6,7 @@ Created on Jun 22, 2015
 from enum import Enum
 from coreserver.models import Instance, CloudProvider
 from collections import defaultdict
-import coreserver.resourcemanager.meezaprovisioner
+from coreserver.resourcemanager.awsprovisioner import AwsProvisioner
 class ResourceManager(object):
     ''' It manages system resources and provisions 
     resources that finish the task before a deadline 
@@ -26,37 +26,32 @@ class ResourceManager(object):
         with minimal price or other criteria
         '''
         return Instance.objects.filter(status="Running").order_by('cloud_provider') #return all the running instances
-    
+     
     @classmethod
-    def provision_resources(cls, instances):
-        if not instances:
-            return None
+    def provision_resources(cls, deadline, **kwargs):
+        ''' Returns an instance object (see models) that finish the request in specified deadline
+        Checks if the default instance is idle or not, if not it calls the
+        aws provisioner to choose the instance that finish the task 
+        with minimal price or other criteria
+        '''
         
-        # here we split the query set of instances into a dictionary where 
-        # the key is the cloud provider name and the value is list of instances      
-        instances_dict = defaultdict(list)
-        for instance in instances:
-            instances_dict[instance.cloud_provider.name].append(instance)
+        # first check the default server is busy or not    
+        default_instance = Instance.objects.get(ipaddress="10.2.0.9")
+        if default_instance.status=="PROCESSING":
+            aws_instance = AwsProvisioner.provision(deadline, **kwargs)
+            return aws_instance
+        return default_instance
         
-        # we get the module and the class name of the cloud provider registered in the system
-        provisioned_instances=[]
-        for cloud_provider_name, list_instances in instances_dict.items():
-            cloud_provider = CloudProvider.objects.get(name=cloud_provider_name)
+    @classmethod
+    def deprovision_resources(cls, instance):
+            #get the cloud manager and get the provisioner class out of it
+            cloud_provider = CloudProvider.objects.get(id=instance.cloud_provider.id)
             try:
-                provisioner_module=globals()[cloud_provider.provisioner_modulename]
+                provisioner_module = globals()[cloud_provider.provisioner_modulename]
             except:
                 provisioner_module = __import__(__package__ + "." + cloud_provider.provisioner_modulename, fromlist=[__package__])
             provisioner_class = getattr(provisioner_module, str(cloud_provider.provisioner_classname))
-            instances_cloud_provider = provisioner_class.provision(list_instances)
-            provisioned_instances = provisioned_instances + instances_cloud_provider
-        return provisioned_instances
-    
-    
-    @classmethod
-    def deprovision_resources(cls, instances):
-        for instance in instances:
-            #get the cloud manager and get the provisioner class out of it
-            pass
+            provisioner_class.deprovision(instance)
     
 
     

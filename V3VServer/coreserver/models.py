@@ -35,8 +35,10 @@ class Account(models.Model):
     id = models.AutoField(primary_key=True)
     created = models.DateTimeField(auto_now_add=True, null=False)
     name=models.CharField(max_length=255, null=False)
+    password=models.CharField(max_length=255)
     license_type=models.CharField(max_length=255)
     description=models.TextField()
+    email=models.EmailField()
     class Meta:
         db_table = "account"
         
@@ -111,7 +113,13 @@ class Conversion_setting(models.Model):
     conversion=models.ForeignKey(Conversion_task)
     class Meta:
         db_table = "conversion_setting"
-    
+
+class Email(models.Model):
+    address = models.EmailField()
+    password = models.CharField(max_length=255)
+    active = models.IntegerField() # 1 indicates this email is the active, 0 indicates not active, only one has tobe active at a time
+    class Meta:
+        db_table = "email" 
 # class Component(models.Model):
 #     id=models.AutoField(primary_key=True)
 #     created = models.DateTimeField(auto_now_add=True)

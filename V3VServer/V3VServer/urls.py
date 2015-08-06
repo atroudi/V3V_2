@@ -22,7 +22,9 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api/', include('coreserver.urls')),
     url(r'^docs/', include('rest_framework_swagger.urls')),
-
+    url(r'^$', views.index, name='index'),
+    url(r'^upload_segment', views.upload_segment, name='Upload segment'),
+    url(r'^register_segment', views.register_segment, name='Register segment'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

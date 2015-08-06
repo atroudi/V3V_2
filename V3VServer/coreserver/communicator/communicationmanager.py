@@ -28,50 +28,40 @@ class CommunicationManager(object):
     '''
     classdocs
     '''
-    def __init__(self, instances, segment2D):
+    def __init__(self, instance, segment2D):
         '''
         Constructor
         '''
-        self.instances=instances
+        self.instance=instance
         self.segment2D=segment2D
       
         
     def send_start_signal(self):
-        list_status=[]
-        for instance in self.instances:
-            try:
-                ssh=pysftp.Connection(host=instance.ipaddress,username=instance.username,password=instance.password)
-                input_path = instance.input_path + "/" +  os.path.basename(self.segment2D.location.__str__())
-                output_path = instance.output_path + "/" + self.segment2D.id.__str__() + ".mp4"
-                command = 'bash -c ' + '"'  + instance.executable_path + " " + self.segment2D.profile.__str__()  + " " + input_path + " " + output_path + '"'
-                print(command)
-                list_output = ssh.execute(command)
-                for word in list_output:
-                    print(word)
-                list_status.append(Status.PROCESSING)
-            except:
-                list_status.append(Status.FAIL)
+        try:
+            ssh=pysftp.Connection(host=self.instance.ipaddress,username=self.instance.username,password=self.instance.password)
+            input_path = self.instance.input_path + "/" +  os.path.basename(self.segment2D.location.__str__())
+            output_path = self.instance.output_path + "/" + self.segment2D.id.__str__() + ".mp4"
+            self.instance.status = 'PROCESSING'
+            self.instance.save()
+            command = 'bash -c ' + '"'  + self.instance.executable_path + " " + self.segment2D.profile.__str__()  + " " + input_path + " " + output_path + '"'
+            print(command)
+            list_output = ssh.execute(command)
+            for word in list_output:
+                print(word)
+            return Status.SUCCESS
+        except:
+            return Status.FAIL
             #if instance.ipaddress == "127.0.0.1": # localhost
-                #subprocess.call("python", self.executable_path,"-i", self.segment2D.location, "-o", self.remote_path , shell=True)  
-        return list_status
-    
+                #subprocess.call("python", self.executable_path,"-i", self.segment2D.location, "-o", self.remote_path , shell=True)      
     def check_status(self):
-        list_status=[]
-        for instance in self.instances:
-            #check the status of the running process
-            list_status.append(Status.SUCCESS)
-        return list_status
+        return Status.SUCCESS
     
     def get_converted_segment_path(self):
-        list_paths=[]
-        for instance in self.instances:
-            output_path = instance.output_path + "/" + self.segment2D.id.__str__() + ".mp4"
-            remote_path_id=RemotePathIdentifier(instance, output_path)
-            list_paths.append(remote_path_id)
-        return list_paths
+        output_path = self.instance.output_path + "/" + self.segment2D.id.__str__() + ".mp4"
+        remote_path_id=RemotePathIdentifier(self.instance, output_path)
+        return remote_path_id
     
     def copy_segment(self):
-        for instance in self.instances:
-            ssh=pysftp.Connection(host=instance.ipaddress,username=instance.username,password=instance.password)
-            ssh.cd(instance.input_path)              # temporarily chdir to public
-            ssh.put(self.segment2D.location)  # upload file to remote server
+        ssh=pysftp.Connection(host=self.instance.ipaddress,username=self.instance.username,password=self.instance.password)
+        ssh.cd(self.instance.input_path)  # temporarily chdir to public
+        ssh.put(self.segment2D.location)  # upload file to remote server

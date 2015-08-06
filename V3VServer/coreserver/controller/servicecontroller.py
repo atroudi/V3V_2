@@ -7,7 +7,8 @@ import time
 
 from coreserver.resourcemanager.resourcemanager import ResourceManager
 from coreserver.communicator.communicationmanager import CommunicationManager, Status, RemotePathIdentifier
-from coreserver.models import Conversion_task,Segment3D 
+from coreserver.models import Conversion_task, Segment3D, Email
+from coreserver.utils.emailsender import EmailSender
 
 
 class ServiceController(object):
@@ -19,12 +20,8 @@ class ServiceController(object):
     timeout=5000000;
     status=Status.INITIATED
     
-    def __init__(self):
-        '''
-        Constructor
-        '''
-        pass
-    def register_conversion_task(self,segment2D):
+    @classmethod
+    def register_conversion_task(cls,segment2D):
         
         # register in the database the new 3D segment and the conversion task that will compute it 
         print("Conversion task launched")
@@ -37,46 +34,39 @@ class ServiceController(object):
         # provision resources via a resource manager 
         deadline = segment2D.duration
         print("deadline=" + deadline.__str__())
-        instances = ResourceManager.check_required_resources(deadline, price=10)
-        print("Resources checked")
-        print("########  Instances involved  #####")
-        for instance in instances:
-            print("ipaddress=" +  instance.ipaddress)
-        provisioned_instances = ResourceManager.provision_resources(instances)
-        print("resources provisioned")
+        provisioned_instance = ResourceManager.provision_resources(deadline, price=10)
+        print("Resources provisioned")
+        print("########  Instance involved  #####")
+        print("ipaddress=" +  provisioned_instance.ipaddress)
         
         # Communicate with the provisioned resources via communication manager  
-        comm_manager = CommunicationManager(provisioned_instances, segment2D)
+        comm_manager = CommunicationManager(provisioned_instance, segment2D)
         print("comm manager initialized")
         comm_manager.copy_segment()
         print("segment copied")
-        list_status = comm_manager.send_start_signal()
-        self.status=Status.PROCESSING
-        print("start signal called, " + "status=" + self.status.__str__())
+        cls.status = comm_manager.send_start_signal()
         
-        ###check the status
-        time_now = time.process_time()   
-        while self.status == Status.PROCESSING:
-            time.sleep(self.sleep_interval)
-            list_status = comm_manager.check_status()
-            if all(status == Status.SUCCESS for status in list_status):
-                self.status= Status.SUCCESS
-            elif all(status == Status.FAIL for status in list_status):
-                self.status= Status.FAIL
-            elapsed_time = time.process_time() - time_now
-            if elapsed_time >= self.timeout:
-                break;
-       
-        ResourceManager.deprovision_resources(instances)
-        if self.status == Status.SUCCESS:
-            list_remote_path_identifiers = comm_manager.get_converted_segment_path()
-            for remote_path_id in list_remote_path_identifiers:
-                segment3D.instance = remote_path_id.instance
-                segment3D.location = remote_path_id.file_path
-                segment3D.save()
-        elif self.status == Status.PROCESSING:
+        ResourceManager.deprovision_resources(provisioned_instance)
+        sender = Email.objects.get(active=1)
+        sender_address = sender.address
+        sender_password = sender.password
+        reciever = segment2D.account.email;
+        if cls.status == Status.SUCCESS:
+            print("status is Success")
+            remote_path_id = comm_manager.get_converted_segment_path()
+            print("remote_path_instance=" +  remote_path_id.instance.ipaddress  + " ,remote_path_file= " + remote_path_id.file_path) 
+            segment3D.instance = remote_path_id.instance
+            segment3D.location = remote_path_id.file_path
+            segment3D.save()
+            text_msg="Segment " + segment2D.id.__str__() + " has been converted to 3D and it can be downloaded by clicking v3v.qcri.org:8000/api/segment2D/" + segment2D.id.__str__()
+            EmailSender.send_email(text_msg, sender_address,sender_password, reciever)
+        elif cls.status == Status.PROCESSING:
+            text_msg='Segment processing failed, timeout error'
+            EmailSender.send_email(text_msg, sender_address,sender_password, reciever)            
             raise TimeoutError
-        elif self.status == Status.FAIL:
+        elif cls.status == Status.FAIL:
+            text_msg='Segment processing failed, process failed'
+            EmailSender.send_email(text_msg, sender_address,sender_password, reciever)
             raise Exception
         
         

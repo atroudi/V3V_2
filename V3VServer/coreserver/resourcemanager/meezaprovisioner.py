@@ -10,14 +10,11 @@ class MeezaProvisioner(AbstractProvisioner):
     Provisioner for the Meeza cluster
     '''
     @classmethod
-    def provision(cls,instances):
-        for instance in instances:
-            # do some checks that the code is there,
-            # otherwise copy the code to the remote server
-            pass
-        return instances
+    def provision(cls, deadline, **kwargs):
+        pass
     
     @classmethod
-    def deprovision(cls,instances):
-        pass
+    def deprovision(cls, instance):
+        instance.status = "Idle"
+        instance.save()
         

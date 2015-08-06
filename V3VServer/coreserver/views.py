@@ -1,16 +1,22 @@
 import mimetypes
 import os
 import pysftp
+from threading import Thread
 
 from rest_framework import status,viewsets
 from rest_framework.response import Response
 from django.http.response import HttpResponse
 from django.core.servers.basehttp import FileWrapper
+from django.views.decorators.csrf import csrf_exempt
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, render
 
 from coreserver.models import Segment2D,Segment3D,Instance,Conversion_task
 from coreserver.serializers import Segment2DSerializer
 from coreserver.controller.servicecontroller import ServiceController
 from coreserver.videoprocessers.simplevideoprocessor import SimpleVideoProcessor
+
+
 
 class Segment2DViewSet(viewsets.ModelViewSet):
     """
@@ -24,22 +30,23 @@ class Segment2DViewSet(viewsets.ModelViewSet):
         """
         Register a new 2D Segment
         """
-        serializer = Segment2DSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#         serializer = Segment2DSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk):
         """
         Upload a new 2D Segment
         """
+        print('Entered Update')
         try:
             segment2D = Segment2D.objects.get(pk=pk)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND) #segment ID not found
         try:
-            inp_file = request.data['file']
+            inp_file = request.FILES['file_source']#request.data['file']
             filename_tokens = inp_file.__str__().split('.')
             if len(filename_tokens) <= 1: #no extension in the file name
                 extension=""
@@ -64,7 +71,9 @@ class Segment2DViewSet(viewsets.ModelViewSet):
             segment2D.save()
             
             # register a conversion task in the system to be discovered by execution thread
-            ServiceController.register_conversion_task(self, segment2D)
+            #ServiceController.register_conversion_task(segment2D)
+            t = Thread(target=ServiceController.register_conversion_task, args=(segment2D,))
+            t.start()
             return Response(status=status.HTTP_202_ACCEPTED)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -73,6 +82,7 @@ class Segment2DViewSet(viewsets.ModelViewSet):
         """
         Check the status of the converted segment and download it when ready
         """
+        print("Entered retrieve")
         try:
             segment2D = Segment2D.objects.get(pk=pk)
         except:
@@ -91,4 +101,28 @@ class Segment2DViewSet(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_100_CONTINUE) # segment not yet converted
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-       
+
+
+### GUI related
+@csrf_exempt
+def index(request):
+    return render_to_response('coreserver/v3v_home.html')
+
+@csrf_exempt
+def upload_segment(request):
+    segment_id=request.POST['segment_id']
+    Segment2DViewSet().update(request, segment_id)
+    context_dict=dict()
+    template = loader.get_template('coreserver/v3v_home.html')
+    message="Segment " + segment_id.__str__() + " has been submitted and you will recieve an email on your registered email once the conversion is done" 
+    context_dict["notification"] = message
+    context_dict["url"] = 'api/segment2D/' + segment_id.__str__()
+    context_dict["converted"] = True
+    context = RequestContext(request, context_dict )     
+    return HttpResponse(template.render(context));
+
+@csrf_exempt
+def register_segment(request):
+    segment_name = request.POST['segment_name']
+    account_num = request.POST['account_num']
+    account_pass = request.POST['account_pass']
