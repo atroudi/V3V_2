@@ -54,6 +54,9 @@ class Segment2D(models.Model):
     resolution=models.CharField(max_length=255)
     url=models.CharField(max_length=255)
     upload_date=models.DateTimeField(null=True)
+    email=models.CharField(max_length=255)
+    source_ip=models.CharField(max_length=255)
+    
     # Relationships
     account=models.ForeignKey(Account)
     instance=ForeignKey(Instance)

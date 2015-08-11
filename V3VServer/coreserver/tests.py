@@ -5,13 +5,19 @@ from coreserver.controller.servicecontroller import ServiceController
 import django
 import coreserver
 from coreserver.utils.emailsender import EmailSender
+from coreserver.views import Segment2DViewSet
+from django.core.handlers.wsgi import WSGIRequest
+from django.test.client import RequestFactory
+from django.http.request import QueryDict
+from coreserver import views
+
 django.setup()
 #import datetime
 # Create your tests here.
 if __name__ == '__main__':
-    instance = Instance.objects.get(ipaddress='10.2.0.9')
-    instance.status = "Idle"
-    instance.save()
+#     instance = Instance.objects.get(ipaddress='10.2.0.9')
+#     instance.status = "Idle"
+#     instance.save()
 #     Conversion_task.objects.all().delete()
 #     segment2D = Segment2D.objects.get(id=1)
 #     ServiceController().register_conversion_task(segment2D)
@@ -19,7 +25,16 @@ if __name__ == '__main__':
     #EmailSender.send_email('hellooooooooooo', 'qcricloud@gmail.com', 'tarek.elgamal@gmail.com')
     #Email.objects.create(address='qcricloud@gmail.com',password='qcrispider')
     
+    request = RequestFactory().post('api/segment2D')
+    views.upload_and_convert_segment(request)
+#     data = QueryDict('', mutable=True)
+#     data['name']="seg"
+#     data['account.name']="Live Demo"
+#     data['account.password']="demo_123"
+#     request.data = data
+#     Segment2DViewSet().create(request)  
     
+      
     #segment3D=Segment3D.objects.create(name="aaa")
     #segment3D=Segment3D.objects.get(name="aaa")
    

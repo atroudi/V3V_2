@@ -47,10 +47,11 @@ class ServiceController(object):
         cls.status = comm_manager.send_start_signal()
         
         ResourceManager.deprovision_resources(provisioned_instance)
+        print("resources deprovisioned")
         sender = Email.objects.get(active=1)
         sender_address = sender.address
         sender_password = sender.password
-        reciever = segment2D.account.email;
+        reciever = segment2D.email;
         if cls.status == Status.SUCCESS:
             print("status is Success")
             remote_path_id = comm_manager.get_converted_segment_path()

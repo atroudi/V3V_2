@@ -23,6 +23,8 @@ urlpatterns = [
     url(r'^api/', include('coreserver.urls')),
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^$', views.index, name='index'),
+    url(r'^statistics', views.get_statistics, name='Get the statistics of the conversion tasks'),
+    url(r'^upload_and_convert_segment', views.upload_and_convert_segment, name='Upload segment'),
     url(r'^upload_segment', views.upload_segment, name='Upload segment'),
     url(r'^register_segment', views.register_segment, name='Register segment'),
 ]

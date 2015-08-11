@@ -1,8 +1,10 @@
 import mimetypes
 import os
-import pysftp
 from threading import Thread
+import datetime
 
+import pysftp
+from ipware.ip import get_ip
 from rest_framework import status,viewsets
 from rest_framework.response import Response
 from django.http.response import HttpResponse
@@ -15,6 +17,9 @@ from coreserver.models import Segment2D,Segment3D,Instance,Conversion_task
 from coreserver.serializers import Segment2DSerializer
 from coreserver.controller.servicecontroller import ServiceController
 from coreserver.videoprocessers.simplevideoprocessor import SimpleVideoProcessor
+from django.http.request import QueryDict
+from rest_framework.decorators import renderer_classes
+from rest_framework.renderers import TemplateHTMLRenderer
 
 
 
@@ -30,11 +35,14 @@ class Segment2DViewSet(viewsets.ModelViewSet):
         """
         Register a new 2D Segment
         """
-#         serializer = Segment2DSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print(request.data)
+        serializer = Segment2DSerializer(data=request.data)
+        print("serializer created")
+        if serializer.is_valid():
+            print("serializer is valid")
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, pk):
         """
@@ -106,10 +114,14 @@ class Segment2DViewSet(viewsets.ModelViewSet):
 ### GUI related
 @csrf_exempt
 def index(request):
-    return render_to_response('coreserver/v3v_home.html')
+    return render_to_response('coreserver/v3v_demo.html')
 
 @csrf_exempt
 def upload_segment(request):
+    """
+       Calls the rest request (update) that does the uploading and the conversion
+       and it returns a message to the GUI
+    """
     segment_id=request.POST['segment_id']
     Segment2DViewSet().update(request, segment_id)
     context_dict=dict()
@@ -121,8 +133,92 @@ def upload_segment(request):
     context = RequestContext(request, context_dict )     
     return HttpResponse(template.render(context));
 
-@csrf_exempt
 def register_segment(request):
-    segment_name = request.POST['segment_name']
-    account_num = request.POST['account_num']
-    account_pass = request.POST['account_pass']
+    pass
+##################################Demo Part################################
+@csrf_exempt
+def get_statistics(request):
+    pass
+
+@csrf_exempt
+@renderer_classes((TemplateHTMLRenderer,))
+def upload_and_convert_segment(request):
+        """
+        Upload a new 2D Segment for the demo
+        """
+        print('Entered Demo Upload and convert')
+        
+        # adding a new 2D segment 
+        print(request.POST['email'])
+        data = QueryDict('', mutable=True)
+        data['name'] = datetime.datetime.now().strftime('%s')
+        data['account.name'] = "Live Demo"
+        data['account.password'] = "demo_123"
+        request.data = data
+        response = Segment2DViewSet().create(request)
+        
+        # preparing the options that can be sent as conversion result 
+        context_dict=dict()
+        template = loader.get_template('coreserver/v3v_demo.html')
+        message_fail = "Problem happenned while converting the segment, please try again after few minutes."
+        message_success = "Your segment has been converted to 3D and it can be downloaded by clicking"
+        context_dict["converted"] = True   
+        
+        if response.status_code != 201:
+            print("Something wrong happenned with the creation")
+            context_dict["notification"] = message_fail
+            context = RequestContext(request, context_dict )
+            return HttpResponse(template.render(context));
+        else:
+            try:
+                segment_name = data['name']
+                email_to_notify = request.POST['email']
+                ipaddress = get_ip(request)
+                segment2D = Segment2D.objects.get(name=segment_name)
+                segment2D.email = email_to_notify
+                segment2D.ipaddress = ipaddress
+                segment2D.save()
+                
+            except:
+                context_dict["notification"] = message_fail
+                context = RequestContext(request, context_dict )
+                return HttpResponse(template.render(context));
+            try:
+                inp_file = request.FILES['file_source']#request.data['file']
+                filename_tokens = inp_file.__str__().split('.')
+                if len(filename_tokens) <= 1: #no extension in the file name
+                    extension=""
+                else:
+                    extension = filename_tokens[len(filename_tokens)-1]
+                new_file_path = "/home/qcriadmin/workspace/V3V/V3VServer/input_segments/"+ segment2D.id.__str__() + "." + extension #TODO extension should not hardcoded
+                new_file = open(new_file_path,"wb")
+                # download the binary file sent in the request
+                while 1:
+                    byte = inp_file.read(1)
+                    new_file.write(byte)
+                    if not byte:
+                        break;
+                new_file.close()
+                localhost_instance = Instance.objects.get(ipaddress="127.0.0.1")
+                segment2D.instance = localhost_instance
+                segment2D.location = new_file_path
+                  
+                ## TODO
+                # get the met data of the video from the video container
+                segment2D = SimpleVideoProcessor.update_meta_data(new_file_path, segment2D)
+                segment2D.save()
+                  
+                # register a conversion task in the system to be discovered by execution thread
+                ServiceController.register_conversion_task(segment2D)
+                
+                # display the output on the webpage
+                context_dict["notification"] = message_success
+                context_dict["url"] = 'api/segment2D/' + segment2D.id.__str__()
+                context_dict["success"] = True
+                context = RequestContext(request, context_dict )
+                return HttpResponse(template.render(context));
+                    
+            except:
+                context_dict["notification"] = message_fail
+                context = RequestContext(request, context_dict )
+                return HttpResponse(template.render(context));
