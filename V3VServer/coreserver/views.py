@@ -184,7 +184,10 @@ def upload_and_convert_segment(request):
                 context = RequestContext(request, context_dict )
                 return HttpResponse(template.render(context));
             try:
+                print("before reading inputfile")
                 inp_file = request.FILES['file_source']#request.data['file']
+                print("pass")
+                print("input file=" + inp_file)
                 filename_tokens = inp_file.__str__().split('.')
                 if len(filename_tokens) <= 1: #no extension in the file name
                     extension=""
