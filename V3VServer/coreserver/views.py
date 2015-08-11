@@ -187,14 +187,17 @@ def upload_and_convert_segment(request):
                 print("before reading inputfile")
                 inp_file = request.FILES['file_source']#request.data['file']
                 print("pass")
-                print("input file=" + inp_file)
+                print("input file=" + inp_file.__str__())
                 filename_tokens = inp_file.__str__().split('.')
                 if len(filename_tokens) <= 1: #no extension in the file name
                     extension=""
                 else:
+                    print("valid file")
                     extension = filename_tokens[len(filename_tokens)-1]
                 new_file_path = "/home/qcriadmin/workspace/V3V/V3VServer/input_segments/"+ segment2D.id.__str__() + "." + extension #TODO extension should not hardcoded
+                print("before opening file to write")
                 new_file = open(new_file_path,"wb")
+                print("starting writing")
                 # download the binary file sent in the request
                 while 1:
                     byte = inp_file.read(1)
@@ -202,6 +205,7 @@ def upload_and_convert_segment(request):
                     if not byte:
                         break;
                 new_file.close()
+                print("file uploaded")
                 localhost_instance = Instance.objects.get(ipaddress="127.0.0.1")
                 segment2D.instance = localhost_instance
                 segment2D.location = new_file_path
