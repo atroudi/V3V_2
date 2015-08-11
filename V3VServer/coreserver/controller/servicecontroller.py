@@ -59,7 +59,7 @@ class ServiceController(object):
             segment3D.instance = remote_path_id.instance
             segment3D.location = remote_path_id.file_path
             segment3D.save()
-            text_msg="Segment " + segment2D.id.__str__() + " has been converted to 3D and it can be downloaded by clicking v3v.qcri.org/api/segment2D/" + segment2D.id.__str__()
+            text_msg="Your video has been converted to 3D and it can be downloaded by clicking v3v.qcri.org/api/segment2D/" + segment2D.id.__str__()
         elif cls.status == Status.PROCESSING:
             text_msg='Segment processing failed, timeout error'
             raise TimeoutError
