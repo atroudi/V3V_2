@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append("/home/qcriadmin/workspace/V3V/V3VServer")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "V3VServer.settings")
 import pysftp
 from django.test import TestCase
 from coreserver.models import Segment2D,Account,Instance,CloudProvider,Segment3D,Conversion_task,Email
@@ -22,11 +26,11 @@ if __name__ == '__main__':
 #     segment2D = Segment2D.objects.get(id=1)
 #     ServiceController().register_conversion_task(segment2D)
         
-    #EmailSender.send_email('hellooooooooooo', 'qcricloud@gmail.com', 'tarek.elgamal@gmail.com')
+    EmailSender.send_email('hellooooooooooo', 'qcricloud@gmail.com', 'qcrispider', 'tarek.elgamal@gmail.com')
     #Email.objects.create(address='qcricloud@gmail.com',password='qcrispider')
     
-    request = RequestFactory().post('api/segment2D')
-    views.upload_and_convert_segment(request)
+#     request = RequestFactory().post('api/segment2D')
+#     views.upload_and_convert_segment(request)
 #     data = QueryDict('', mutable=True)
 #     data['name']="seg"
 #     data['account.name']="Live Demo"
