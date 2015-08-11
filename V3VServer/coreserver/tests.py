@@ -14,6 +14,8 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.test.client import RequestFactory
 from django.http.request import QueryDict
 from coreserver import views
+import yagmail
+
 
 django.setup()
 #import datetime
@@ -25,8 +27,11 @@ if __name__ == '__main__':
 #     Conversion_task.objects.all().delete()
 #     segment2D = Segment2D.objects.get(id=1)
 #     ServiceController().register_conversion_task(segment2D)
-        
-    EmailSender.send_email('hellooooooooooo', 'qcricloud@gmail.com', 'qcrispider', 'tarek.elgamal@gmail.com')
+    #yagmail.register('qcricloud', 'qcrispider')
+    #yag = yagmail.Connect('me@gmail.com', password)
+    yag = yagmail.SMTP('qcricloud@gmail.com')
+    yag.send('qcricloud@gmail.com', subject = None, contents = 'Hello')
+    #EmailSender.send_email('hellooooooooooo', 'qcricloud@gmail.com', 'qcrispider', 'tarek.elgamal@gmail.com')
     #Email.objects.create(address='qcricloud@gmail.com',password='qcrispider')
     
 #     request = RequestFactory().post('api/segment2D')
