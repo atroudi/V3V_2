@@ -1,5 +1,5 @@
 
-function Depth_Query = DGC(Query_rgb_original, mask, p, Dataset_Fm,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset)
+function Depth_Query = DGC(Query_rgb_original, mask, p, Dataset_Fm,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset,Ref_Path)
 
 
     % Parameters

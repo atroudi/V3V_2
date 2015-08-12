@@ -26,7 +26,11 @@ boundary_query_T = boundary_query_T(:);
 
 for id = 1:L.NumObjects
     object_pix = cell2mat(L.PixelIdxList(id));
-    boundary_query_T(object_pix(0.75*length(object_pix):end)) = 0;
+    if sum(object_pix>(H-1)*W)>W/10 && sum(rem(object_pix,W)==0)>H/20 && sum(rem(object_pix,W)==1)>H/20 % if its well connected to the 3 edges (left, right, bottom)
+      boundary_query_T(object_pix(1:end)) = 0; % we shouldn't include it's boundaries in the boundary cut
+    else
+      boundary_query_T(object_pix(0.75*length(object_pix):end)) = 0;
+    end
 end
 
 boundary_query = reshape (boundary_query_T,size(boundary_query'));

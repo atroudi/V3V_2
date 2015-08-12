@@ -27,26 +27,33 @@ p.Max_images = 110; % max number of images in each ref file
 p.SIFT_size = 32+3;
 p.block_size = 9 ;%9
 p.color_weight = 1; %% for block descriptor
-p.max_disp = 20;        
+p.max_disp = 20; 
+p.SpatialSmoothness =0;
+p.sigma = 3;
+p.temporal_window = 5;
+
         
 switch Profile
     case 0                         % Lowest profile (low quality)
         p.k = 1; %% KNN
         p.resize_factor = 1/4;
         p.mask_resize_factor = 1/8;
-        p.temporal_window = 1;
+        p.TiltMethod = 1;% 1 == shifting   , 2 == interp2
+        %p.temporal_window = 1;
 
     case 1                         % Basic profile
         p.k = 6; %% KNN
         p.resize_factor = 1/4;
         p.mask_resize_factor = 1;
-        p.temporal_window = 2;
+        p.TiltMethod = 2;% 1 == shifting   , 2 == interp2
+        %p.temporal_window = 2;
    
     %{    
     case 2                         % 
         p.k = 10; %% KNN
         p.resize_factor = 1/2;
         p.mask_resize_factor = 1;
+        p.TiltMethod = 2;% 1 == shifting   , 2 == interp2
         p.temporal_window = 2;
      %}
         
@@ -54,13 +61,15 @@ switch Profile
         p.k = 10; %% KNN
         p.resize_factor = 1/2;
         p.mask_resize_factor = 1;
-        p.temporal_window = 5;
+        p.TiltMethod = 2;% 1 == shifting   , 2 == interp2
+        %p.temporal_window = 5;
         
     case 4                         % High profile (not practical)
         p.k = 10; %% KNN
         p.resize_factor = 1;
         p.mask_resize_factor = 1;
-        p.temporal_window = 5;
+        p.TiltMethod = 2;% 1 == shifting   , 2 == interp2
+        %p.temporal_window = 5;
         
 end
 
@@ -235,12 +244,18 @@ for Query_Path_idx = 1:size(Query_Paths,1)
     [vres_original, hres_original, u] = size(I_original); 
     d_vres = size(Dataset_Gx,3); 
     d_hres = size(Dataset_Gx,4);
-    [Gx, Gy, xx, yy, YY] = GetGxGy(vres_original,hres_original/2,p.resize_factor);
+    
+    %[Gx, Gy, xx, yy, YY] = GetGxGy(vres_original,hres_original/2,p.resize_factor);
+    if(p.SpatialSmoothness == 1)
+        [Gx, Gy, xx, yy, YY] = WarpingInitilization(vres_original,hres_original/2,R);
+    else
+        [xx, yy, YY] = WarpingInitilization_Simple(vres_original,hres_original/2);
+    end
     
     
     while frames_processed< Number_of_Frames_folder
         
-        Number_of_Frames = min(Number_of_Frames_folder-frames_processed,250);% 10 sec
+        Number_of_Frames = min(Number_of_Frames_folder-frames_processed,250*6);% 10*6 sec
         
         % read all frames     
         Query_rgb_original_all = uint8(zeros(vres_original, hres_original/2, u, Number_of_Frames));
@@ -282,24 +297,30 @@ tic
           Query_rgb_original = Query_rgb_original_all(:,:,:,Query_no);
          
           if CLASS(Query_no) == 1 %% Long    
-              stereo_all(:,:,:,Query_no) = tilt(Query_rgb_original, p.max_disp);
-              depth_all(:,:,:,Query_no) = zeros(d_vres,d_hres);
+              stereo_all(:,:,:,Query_no) = tilt(Query_rgb_original, p);
+              ramp= imresize((0:255)',[d_vres 1]);
+              depth_all(:,:,Query_no) = repmat(ramp,1,d_hres);
           
           elseif CLASS(Query_no) == 2 %% Medium     
-              depth = DGC(Query_rgb_original, mask(:,:,Query_no), p, Dataset_Fm,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset);
-              depth_all(:,:,:,Query_no) = depth;
+              depth = DGC(Query_rgb_original, mask(:,:,Query_no), p, Dataset_Fm,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset,Ref_Path);
+              depth_all(:,:,Query_no) = depth;
+              stereo_all(:,:,:,Query_no) = zeros(vres_original, hres_original, u);
+              %{
               if p.temporal_window == 1
                   stereo_all(:,:,:,Query_no) = 255*WarpFinal(im2double(Query_rgb_original),im2double(depth),p.max_disp,p.resize_factor,Gx, Gy, xx, yy, YY);
               else
                   stereo_all(:,:,:,Query_no) = zeros(vres_original, hres_original, u);
               end
+              %}
               
           elseif CLASS(Query_no) == 3 %% Short
-              stereo_all(:,:,:,Query_no)= [Query_rgb_original Query_rgb_original]; % do nothing
-              depth_all(:,:,:,Query_no) = zeros(d_vres,d_hres);
+              %stereo_all(:,:,:,Query_no)= [Query_rgb_original Query_rgb_original]; % do nothing
+              %depth_all(:,:,Query_no) = 255*ones(d_vres,d_hres);
+              depth = DGC(Query_rgb_original, zeros(size(mask(:,:,Query_no))), p, Dataset_Fm,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset,Ref_Path); 
+              depth_all(:,:,Query_no) = depth;
+              stereo_all(:,:,:,Query_no) = zeros(vres_original, hres_original, u);
+              
               %{
-              depth = DGC(Query_rgb_original, zeros(size(mask(:,:,Query_no))), p, Dataset_Fm,Ref_Path,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset); 
-              depth_all(:,:,:,Query_no) = depth;
               if p.temporal_window == 1
                   stereo_all(:,:,:,Query_no) = 255*WarpFinal(im2double(Query_rgb_original),im2double(depth),p.max_disp,p.resize_factor,Gx, Gy, xx, yy, YY);
               else
@@ -310,11 +331,54 @@ tic
           
     end 
 %toc  
-%tic    
+%tic 
+
     % Warping
-    if p.temporal_window >1
-       stereo_all = RunData(Query_rgb_original_all,depth_all,stereo_all,p.resize_factor,p.temporal_window,p.max_disp); 
+    depth_all_smoothed = depth_all;
+    
+    for FR = 2*p.temporal_window+1:Number_of_Frames-2*p.temporal_window
+        if sum(sum(sum(stereo_all(:,:,:,FR))))== 0
+            
+          K = 0;
+          w = p.temporal_window;
+          sigma = p.sigma;
+          
+         if sum(sum(sum(sum(stereo_all(:,:,:,FR-2*w:FR+2*w)))))~=0 || CLASS(FR)==3 % if closeup or in a transition from other methods to DGC double the temporal smoothing parameters
+             w = 2*w;
+             sigma = 2*p.sigma;
+         end
+         
+         num_frames = 2*w+1;
+         D = zeros(d_vres,d_hres,num_frames);
+         g = fspecial('gaussian',[1 num_frames],sigma);
+         
+         for fr = FR-w:FR+w,
+            K = K + 1;
+            D(:,:,K) = g(K)*depth_all(:,:,fr);
+         end
+         
+         
+         depth_all_smoothed(:,:,FR) = sum(D,3);
+         
+        end
     end
+    
+    parfor FR = 1:Number_of_Frames
+        if sum(sum(sum(stereo_all(:,:,:,FR))))== 0
+         
+            if p.SpatialSmoothness == 1
+                %stereo_all(:,:,:,FR) = ViewInterpolation(Query_rgb_original_all(:,:,:,FR),depth_all_smoothed(:,:,FR),20,0.25,Gx,Gy,xx,yy,YY);
+            else
+                stereo_all(:,:,:,FR) = 255*SimpleInterpolation(im2double(Query_rgb_original_all(:,:,:,FR)),im2double(depth_all_smoothed(:,:,FR)),20,0.25,xx,yy,YY);
+            end
+        end
+    end
+    
+    %{
+    if p.temporal_window >1
+      stereo_all = RunData(Query_rgb_original_all,depth_all,stereo_all,p.resize_factor,p.temporal_window,p.max_disp); 
+    end
+    %}
 %toc
     
 %toc  
@@ -323,7 +387,7 @@ run_time = toc;
     % write results
     parfor Query_no = 1:Number_of_Frames
            Stereo = stereo_all(:,:,:,Query_no);
-           Depth = depth_all(:,:,:,Query_no);
+           Depth = depth_all_smoothed(:,:,Query_no);
            if sum(Stereo(:)) % Remove the last temp_wind black frames
             imwrite(uint8(Stereo), [Output_Path,num2str(frames_processed+Query_no,'%08d'),'.png'],'png');
             imwrite(uint8(Depth), [Output_Path,'Depth/',num2str(frames_processed+Query_no,'%08d'),'.png'],'png');
