@@ -316,6 +316,7 @@ tic
           elseif CLASS(Query_no) == 3 %% Short
               %stereo_all(:,:,:,Query_no)= [Query_rgb_original Query_rgb_original]; % do nothing
               %depth_all(:,:,Query_no) = 255*ones(d_vres,d_hres);
+              
               depth = DGC(Query_rgb_original, zeros(size(mask(:,:,Query_no))), p, Dataset_Fm,Dataset_SIFT,Dataset_Gx,Dataset_Gy,Block_Discriptor_Dataset,Ref_Path); 
               depth_all(:,:,Query_no) = depth;
               stereo_all(:,:,:,Query_no) = zeros(vres_original, hres_original, u);

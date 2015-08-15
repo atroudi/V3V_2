@@ -83,6 +83,6 @@ while j<=size(class_lengths,1)-1
        
     end
 end
-class_lengths
+
 last_class = class_lengths(end,1);
 last_count = class_lengths(end,2);
