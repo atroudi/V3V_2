@@ -31,7 +31,7 @@ p.max_disp = 20;
 p.SpatialSmoothness =0;
 p.sigma = 3;
 p.temporal_window = 5;
-
+p.refine_pitch_model = 0; %if 1 then the pitch model will be updated based on the dominant color
         
 switch Profile
     case 0                         % Lowest profile (low quality)
@@ -271,7 +271,7 @@ for Query_Path_idx = 1:size(Query_Paths,1)
 tic    
     %%%% Cassification   %%%%%%%
     
-    [CLASS, mask] = GetSceneClassification_WithoutCuts(Query_rgb_original_all,pwd,p.resize_factor* p.mask_resize_factor);
+    [CLASS, mask] = GetSceneClassification_WithoutCuts(Query_rgb_original_all,pwd,p.resize_factor* p.mask_resize_factor,p.refine_pitch_model);
 
     [CLASS, last_count, last_class] = CleanClass(Query_rgb_original_all,CLASS,pre_count, pre_class);
     

@@ -1,4 +1,4 @@
-function [CLASS, masks] = GetSceneClassification_WithoutCuts(Query_rgb_original,root,resize_factor)
+function [CLASS, masks] = GetSceneClassification_WithoutCuts(Query_rgb_original,root,resize_factor, refine_pitch_model)
 
 %%A function to classify scenes 
 
@@ -25,7 +25,9 @@ no_frames = size(Query_rgb_original,4);
 optmixture_all=load([root '/LinePitchModel.mat']);
 optmixture=optmixture_all.optmixture;
 
+if refine_pitch_model ==1
 optmixture= DetectMainPitch(cat(4,Query_rgb_original(:,:,:,1),Query_rgb_original(:,:,:,floor(end/2)),Query_rgb_original(:,:,:,end)),optmixture,resize_factor,25, 0.8,-150);
+end
 
 GMM_threshold = -20;
 
