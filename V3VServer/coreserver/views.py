@@ -160,12 +160,12 @@ def upload_and_convert_segment(request):
         # preparing the options that can be sent as conversion result 
         context_dict=dict()
         template = loader.get_template('coreserver/v3v_demo.html')
-        message_fail = "Problem happenned while converting the segment, please try again after few minutes."
+        message_fail = "Problem happened while converting the segment, please try again after few minutes."
         message_success = "Your segment has been converted to 3D and it can be downloaded by clicking"
         context_dict["converted"] = True   
         
         if response.status_code != 201:
-            print("Something wrong happenned with the creation")
+            print("Something wrong happened with the creation")
             context_dict["notification"] = message_fail
             context = RequestContext(request, context_dict )
             return HttpResponse(template.render(context));
@@ -194,16 +194,20 @@ def upload_and_convert_segment(request):
                 else:
                     print("valid file")
                     extension = filename_tokens[len(filename_tokens)-1]
-                new_file_path = "/home/qcriadmin/workspace/V3V/V3VServer/input_segments/"+ segment2D.id.__str__() + "." + extension #TODO extension should not hardcoded
+                new_file_path = "/home/qcriadmin/workspace/V3V/V3VServer/input_segments/"+ segment2D.id.__str__() + "." + extension 
+                # TODO extension should not hardcoded
                 print("before opening file to write")
                 new_file = open(new_file_path,"wb")
                 print("starting writing")
                 # download the binary file sent in the request
-                while 1:
+                """while 1:
                     byte = inp_file.read(1)
                     new_file.write(byte)
                     if not byte:
-                        break;
+                        break;"""
+                for chunk in inp_file.chunks():
+                    new_file.write(chunk)
+                    
                 new_file.close()
                 print("file uploaded")
                 localhost_instance = Instance.objects.get(ipaddress="127.0.0.1")
