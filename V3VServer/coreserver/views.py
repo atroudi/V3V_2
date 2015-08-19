@@ -210,6 +210,7 @@ def upload_and_convert_segment(request):
                     
                 new_file.close()
                 print("file uploaded")
+                
                 localhost_instance = Instance.objects.get(ipaddress="127.0.0.1")
                 segment2D.instance = localhost_instance
                 segment2D.location = new_file_path
@@ -218,15 +219,17 @@ def upload_and_convert_segment(request):
                 # get the met data of the video from the video container
                 segment2D = SimpleVideoProcessor.update_meta_data(new_file_path, segment2D)
                 segment2D.save()
-                  
+                                  
                 # register a conversion task in the system to be discovered by execution thread
                 ServiceController.register_conversion_task(segment2D)
+                print("#### returned ###")
                 
                 # display the output on the webpage
                 context_dict["notification"] = message_success
                 context_dict["url"] = 'api/segment2D/' + segment2D.id.__str__()
                 context_dict["success"] = True
                 context = RequestContext(request, context_dict )
+                print("#### returned 222 ###")
                 return HttpResponse(template.render(context));
                     
             except:

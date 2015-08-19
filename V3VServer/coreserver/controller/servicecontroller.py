@@ -9,6 +9,11 @@ from coreserver.resourcemanager.resourcemanager import ResourceManager
 from coreserver.communicator.communicationmanager import CommunicationManager, Status, RemotePathIdentifier
 from coreserver.models import Conversion_task, Segment3D, Email
 from coreserver.utils.emailsender import EmailSender
+from threading import Thread
+import os
+import sys
+import pysftp
+from multiprocessing.context import Process
 
 
 class ServiceController(object):
@@ -34,38 +39,19 @@ class ServiceController(object):
         # provision resources via a resource manager 
         deadline = segment2D.duration
         print("deadline=" + deadline.__str__())
+
         provisioned_instance = ResourceManager.provision_resources(deadline, price=10)
         print("Resources provisioned")
         print("########  Instance involved  #####")
         print("ipaddress=" +  provisioned_instance.ipaddress)
         
         # Communicate with the provisioned resources via communication manager  
-        comm_manager = CommunicationManager(provisioned_instance, segment2D)
-        print("comm manager initialized")
-        comm_manager.copy_segment()
-        print("segment copied")
-        cls.status = comm_manager.send_start_signal()
+        comm_manager = CommunicationManager(provisioned_instance, segment2D, segment3D)
+        print("comm manager initialized")    
+            
+        comm_manager.send_start_signal()
+            
+        print ("###################### here :3")
         
-        ResourceManager.deprovision_resources(provisioned_instance)
-        print("resources deprovisioned")
-        sender = Email.objects.get(active=1)
-        sender_address = sender.address
-        sender_password = sender.password
-        reciever = segment2D.email;
-        if cls.status == Status.SUCCESS:
-            print("status is Success")
-            remote_path_id = comm_manager.get_converted_segment_path()
-            print("remote_path_instance=" +  remote_path_id.instance.ipaddress  + " ,remote_path_file= " + remote_path_id.file_path) 
-            segment3D.instance = remote_path_id.instance
-            segment3D.location = remote_path_id.file_path
-            segment3D.save()
-            text_msg="Your video has been converted to 3D and it can be downloaded by clicking v3v.qcri.org/api/segment2D/" + segment2D.id.__str__()
-        elif cls.status == Status.PROCESSING:
-            text_msg='Segment processing failed, timeout error'
-            raise TimeoutError
-        elif cls.status == Status.FAIL:
-            text_msg='Segment processing failed, process failed'
-            raise Exception
-        if reciever:
-            EmailSender.send_email(text_msg, sender_address,sender_password, reciever)
-        
+        return
+    

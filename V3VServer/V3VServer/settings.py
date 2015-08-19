@@ -9,6 +9,17 @@ https://docs.djangoproject.com/en/1.8/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
+from __future__ import absolute_import
+
+# Celery settings
+
+BROKER_URL = 'django://'
+
+#: Only add pickle to this list if your broker is secured
+#: from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -42,6 +53,7 @@ INSTALLED_APPS = (
     'rest_framework_swagger',
     'coreserver',
     'mgmtconsole',
+    'kombu.transport.django', #for celery
 )
 SWAGGER_SETTINGS = {
     'exclude_namespaces': [],

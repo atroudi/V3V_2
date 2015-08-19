@@ -38,8 +38,8 @@ class ResourceManager(object):
         # first check the default server is busy or not    
         default_instance = Instance.objects.get(ipaddress="10.2.0.9")
         #if default_instance.status=="PROCESSING":
-         #   aws_instance = AwsProvisioner.provision(deadline, **kwargs)
-          #  return aws_instance
+        #   aws_instance = AwsProvisioner.provision(deadline, **kwargs)
+        #  return aws_instance
         return default_instance
         
     @classmethod
