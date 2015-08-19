@@ -9,10 +9,11 @@ import subprocess
 
 import pysftp
 from coreserver.resourcemanager.resourcemanager import ResourceManager
-from coreserver.models import Email
+from coreserver.models import Email, Segment2D, Segment3D, Instance
 from coreserver.utils.emailsender import EmailSender
 import time
 from coreserver.resourcemanager.meezaprovisioner import MeezaProvisioner
+from celery import shared_task
 
 class Status(Enum):
     INITIATED=1
@@ -33,14 +34,14 @@ class CommunicationManager(object):
     '''
     classdocs
     '''
-    def __init__(self, instance, segment2D, segment3D):
+    def __init__(self, inst, seg2D, seg3D):
         '''
         Constructor
         '''
-        self.instance=instance
-        self.segment2D=segment2D
-        self.segment3D = segment3D
-      
+        self.instance  = Instance.objects.get(id=inst)
+        self.segment2D = Segment2D.objects.get(id=seg2D)
+        self.segment3D = Segment3D.objects.get(id=seg3D)
+    
     def send_start_signal(self):
         while 1:
             while self.instance.status == 'PROCESSING':
@@ -113,7 +114,7 @@ class CommunicationManager(object):
    
         if reciever:
             EmailSender.send_email(text_msg, sender_address,sender_password, reciever)
-            
+    
     def error_email(self):
         sender = Email.objects.get(active=1)
         sender_address = sender.address

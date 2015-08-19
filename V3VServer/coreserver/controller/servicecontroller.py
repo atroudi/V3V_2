@@ -14,6 +14,8 @@ import os
 import sys
 import pysftp
 from multiprocessing.context import Process
+from celery.app import shared_task
+from coreserver.tasks import print_hi, comm_manager_work
 
 
 class ServiceController(object):
@@ -43,15 +45,13 @@ class ServiceController(object):
         provisioned_instance = ResourceManager.provision_resources(deadline, price=10)
         print("Resources provisioned")
         print("########  Instance involved  #####")
-        print("ipaddress=" +  provisioned_instance.ipaddress)
-        
-        # Communicate with the provisioned resources via communication manager  
-        comm_manager = CommunicationManager(provisioned_instance, segment2D, segment3D)
-        print("comm manager initialized")    
+        print("ipaddress=" +  provisioned_instance.ipaddress) 
             
-        comm_manager.send_start_signal()
+        # calling celery task
+        comm_manager_work.delay(provisioned_instance.id, segment2D.id, segment3D.id)
+        #comm_manager_work.delay(provisioned_instance, segment2D, segment3D)
             
-        print ("###################### here :3")
+        print ("------------- uploaded and sent to communication manager")
         
         return
-    
+
