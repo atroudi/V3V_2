@@ -129,7 +129,7 @@ def upload_segment(request):
     message="Segment " + segment_id.__str__() + " has been submitted and you will recieve an email on your registered email once the conversion is done" 
     context_dict["notification"] = message
     context_dict["url"] = 'api/segment2D/' + segment_id.__str__()
-    context_dict["converted"] = True
+    context_dict["finished"] = True
     context = RequestContext(request, context_dict )     
     return HttpResponse(template.render(context));
 
@@ -160,9 +160,9 @@ def upload_and_convert_segment(request):
         # preparing the options that can be sent as conversion result 
         context_dict=dict()
         template = loader.get_template('coreserver/v3v_demo.html')
-        message_fail = "Problem happened while converting the segment, please try again after few minutes."
-        message_success = "Your segment has been converted to 3D and it can be downloaded by clicking"
-        context_dict["converted"] = True   
+        message_fail = "*** Problem happened while converting the segment, please try again after few minutes."
+        message_success = '*** Your video has been uploaded successfully and we will send the converted 3D video to your email when it is ready,\n Thanks for using our 2D-3D Conversion Service'
+        context_dict["finished"] = True   
         
         if response.status_code != 201:
             print("Something wrong happened with the creation")
@@ -224,11 +224,9 @@ def upload_and_convert_segment(request):
                 ServiceController.register_conversion_task(segment2D)
                 print("#### returned ###")
                 
-                # display the output on the webpage
+                # display "uploading finished" on the webpage
                 context_dict["notification"] = message_success
-                context_dict["url"] = 'api/segment2D/' + segment2D.id.__str__()
-                context_dict["success"] = True
-                context = RequestContext(request, context_dict )
+                context = RequestContext(request, context_dict)
                 print("#### returned 222 ###")
                 return HttpResponse(template.render(context));
                     

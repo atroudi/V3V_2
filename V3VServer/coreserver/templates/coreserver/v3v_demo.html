@@ -62,27 +62,6 @@ $(document).ready( function() {
 	<br />
 	<button id="submit-button" class="btn btn-default">Submit</button>
 
-	<!-- Modal -->
-	<!--
-	<div id="modal" class="modal fade" role="dialog">
-		<div class="modal-dialog"> -->
-		<!-- Modal content-->
-	<!--
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Do you want to be notified by email ? (Leave empty if not interested)</h4>
-			</div>
-			<div class="modal-body">
-				email address: <input type="text" name="email"><br /> <br />
-			</div>
-			<div class="modal-footer">
-				<button id="submit-button" class="btn btn-default" data-dismiss="modal">Submit</button>
-			</div>
-		</div>
-		</div>
-	</div> -->
-
      </form>
 
 	        </div>
@@ -91,24 +70,14 @@ $(document).ready( function() {
 	</div> 
 
   </div>
-<!--
+
    {% block message %}
-	{% if converted %}
-   <div style="background:LightYellow  !important" class="jumbotron"> 
-     <b><p>Conversion result:</p></b>
-     <h5>{{notification}}
-     {% if success %}
-     <a href={{url}}>here</a>
-     {% endif %}  
-     </h5>
-     
-     
-     
-     
+	{% if finished %}
+   <div style="background:LightYellow  !important"> 
+     <b> <h5>{{notification}}</h5> </b>
   </div>
 	{% endif %}  
   {% endblock %}
--->
  
 </div>
 </body>
