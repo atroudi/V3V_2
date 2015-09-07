@@ -1,0 +1,370 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Converter package &mdash; V3VCore 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="V3VCore 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="DepthDatabase package" href="DepthDatabase.html" />
+    <link rel="prev" title="Configuration package" href="Configuration.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="DepthDatabase.html" title="DepthDatabase package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Configuration.html" title="Configuration package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">V3VCore 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="converter-package">
+<h1>Converter package<a class="headerlink" href="#converter-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-Converter.BasicConverter">
+<span id="converter-basicconverter-module"></span><h2>Converter.BasicConverter module<a class="headerlink" href="#module-Converter.BasicConverter" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Converter.BasicConverter.BasicConverter">
+<em class="property">class </em><code class="descclassname">Converter.BasicConverter.</code><code class="descname">BasicConverter</code><a class="headerlink" href="#Converter.BasicConverter.BasicConverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a parent basic class for any 2D to 3D conversion method</p>
+<dl class="staticmethod">
+<dt id="Converter.BasicConverter.BasicConverter.convert">
+<em class="property">static </em><code class="descname">convert</code><span class="sig-paren">(</span><em>image</em>, <em>conversionParam</em>, <em>spcificParameters</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.BasicConverter.BasicConverter.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the API for any other conversion method class</p>
+<p>It puts the result side by side image in the Image class given as input</p>
+<dl class="docutils">
+<dt>Input:</dt>
+<dd><ul class="first last simple">
+<li>image: object from Image class that contains input and output parameters describing a specific frame</li>
+<li>conversionParam: conversion parameters</li>
+<li>specificParameters: any additional information needed for conversion,                     this can be a list of parameters                     or can be a class for each conversion method</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Converter.ConversionTask">
+<span id="converter-conversiontask-module"></span><h2>Converter.ConversionTask module<a class="headerlink" href="#module-Converter.ConversionTask" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Converter.ConversionTask.ConversionTask">
+<em class="property">class </em><code class="descclassname">Converter.ConversionTask.</code><code class="descname">ConversionTask</code><a class="headerlink" href="#Converter.ConversionTask.ConversionTask" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="Converter.ConversionTask.ConversionTask.convert">
+<em class="property">static </em><code class="descname">convert</code><span class="sig-paren">(</span><em>inputFilePath</em>, <em>outputFilePath</em>, <em>conversionParam</em>, <em>depthDatabase</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.ConversionTask.ConversionTask.convert" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Controls the conversion task</dt>
+<dd><ol class="first last arabic">
+<li><p class="first">Read the input video and initialize the parameters needed</p>
+</li>
+<li><p class="first">Divide the video into chunks to allow parallelization</p>
+</li>
+<li><p class="first">Construct the Image Objects by sampling each chunk</p>
+</li>
+<li><dl class="first docutils">
+<dt>For each Image in each chunk:</dt>
+<dd><ol class="first last loweralpha simple">
+<li>Classify this frame (long, medium, close shot)</li>
+<li>Call the appropriate method for conversion,                      If the method is DGC, then pass to it the needed features                     and the needed masks</li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p class="first">Save the output video after conversion finishes</p>
+</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Converter.DGC">
+<span id="converter-dgc-module"></span><h2>Converter.DGC module<a class="headerlink" href="#module-Converter.DGC" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Converter.DGC.DGC">
+<em class="property">class </em><code class="descclassname">Converter.DGC.</code><code class="descname">DGC</code><a class="headerlink" href="#Converter.DGC.DGC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Converter.BasicConverter.BasicConverter" title="Converter.BasicConverter.BasicConverter"><code class="xref py py-class docutils literal"><span class="pre">Converter.BasicConverter.BasicConverter</span></code></a></p>
+<p>Depth Gradient Converter class, a child from Basic Converter class to handle medium and close shots</p>
+<dl class="staticmethod">
+<dt id="Converter.DGC.DGC.DepthConstructor">
+<em class="property">static </em><code class="descname">DepthConstructor</code><span class="sig-paren">(</span><em>image</em>, <em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC.DGC.DepthConstructor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Having the estimated depth gradients for the query,             we use poisson reconstruction to reconstruct the depth image using its gradients             In addition we should detect the object boundaries from image.nonPitchMask             to cut the poisson equation on object boundaries</p>
+<ol class="arabic simple">
+<li>Detecting object boundaries from image.nonPitchMask</li>
+<li>Solving Poisson</li>
+</ol>
+<p>it sets depth parameter of the Image object to the calculated depth</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="Converter.DGC.DGC.DepthGradientEstimator">
+<em class="property">static </em><code class="descname">DepthGradientEstimator</code><span class="sig-paren">(</span><em>image</em>, <em>conversionParam</em>, <em>databaseFeatures</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC.DGC.DepthGradientEstimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>In this step we find the K Nearest Neighbors (KNN) for the query from the database             Searching block by block through the KNN we then find the best matching block for each block of the query 
+and copy the depth gradients (Gx, Gy) from the best matching block to the query</p>
+<p>it sets Gx, Gy parameters of the Image object to the calculated Gx, Gy</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="Converter.DGC.DGC.StereoCreatorFromDepth">
+<em class="property">static </em><code class="descname">StereoCreatorFromDepth</code><span class="sig-paren">(</span><em>image</em>, <em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC.DGC.StereoCreatorFromDepth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using the original frame (with the original size) and the generated depth image we now generate stereo image</p>
+<dl class="docutils">
+<dt>There should be 4 stages:</dt>
+<dd><ol class="first last arabic simple">
+<li>Global parameters initialization</li>
+<li>FrameSpecific parameters</li>
+<li>Depth refinement</li>
+<li>View interpolation</li>
+</ol>
+</dd>
+</dl>
+<p>it sets leftImage, rightImage, sideBySide parameters of the Image object to the calculated ones</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="Converter.DGC.DGC.convert">
+<em class="property">static </em><code class="descname">convert</code><span class="sig-paren">(</span><em>image</em>, <em>conversionParam</em>, <em>databaseFeatures</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC.DGC.convert" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>DGC Conversion consists of 3 sequential steps: </dt>
+<dd><ol class="first last arabic simple">
+<li>Depth gradient estimator: estimating Gx, Gy using the given databaseFeatures</li>
+<li>Depth reconstructor: estimating the depth map</li>
+<li>Stereo creator from V+D: creating the leftImage, rightImage, and sideBySide</li>
+</ol>
+</dd>
+</dl>
+<p>It changes the leftImage and rightImage and sideBySide variables in the given image Object</p>
+<p>It uses a machine learning K Nearest Neighbors (KNN) classification algorithm             to estimate the depthMap from the database of images and their depthMaps and their features</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Converter.Image">
+<span id="converter-image-module"></span><h2>Converter.Image module<a class="headerlink" href="#module-Converter.Image" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Converter.Image.ImageInfo">
+<em class="property">class </em><code class="descclassname">Converter.Image.</code><code class="descname">ImageInfo</code><a class="headerlink" href="#Converter.Image.ImageInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains all the data needed for a specific frame image</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><ul class="first last simple">
+<li>originalImage: the original RGB image (Input)</li>
+<li>leftImage: (now it is just the original image)</li>
+<li>rightImage: (it is estimated according to the depth at Converter)</li>
+<li>sideBySide: the stereo image (putting the left and right image side by side in one image)</li>
+<li>depth: The corresponding greyscale depth map (width x height) (done at Converter)</li>
+<li>nonPitchMask: 2D boolean array (1 nonPitch, 0 pitch) needed in DGC (done at sceneClassifier)</li>
+<li>sceneClass: Integer representing the classification of this image (done at sceneClassifier)</li>
+<li>Gx, Gy: Arrays representing the gradients of the image (estimated at DGC)</li>
+<li>SS: the resulting Side by side image (3D Image) (done at Converter)</li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-Converter.MotionEstimation">
+<span id="converter-motionestimation-module"></span><h2>Converter.MotionEstimation module<a class="headerlink" href="#module-Converter.MotionEstimation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Converter.MotionEstimation.MotionEstimation">
+<em class="property">class </em><code class="descclassname">Converter.MotionEstimation.</code><code class="descname">MotionEstimation</code><a class="headerlink" href="#Converter.MotionEstimation.MotionEstimation" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="staticmethod">
+<dt id="Converter.MotionEstimation.MotionEstimation.estimateMotion">
+<em class="property">static </em><code class="descname">estimateMotion</code><span class="sig-paren">(</span><em>currentImage</em>, <em>nextImage</em>, <em>conversionParam</em>, <em>otherParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.MotionEstimation.MotionEstimation.estimateMotion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes motion vector for each pel
+Returns NULL in case of error</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Converter.SceneClassifier">
+<span id="converter-sceneclassifier-module"></span><h2>Converter.SceneClassifier module<a class="headerlink" href="#module-Converter.SceneClassifier" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Converter.SceneClassifier.SceneClassifier">
+<em class="property">class </em><code class="descclassname">Converter.SceneClassifier.</code><code class="descname">SceneClassifier</code><a class="headerlink" href="#Converter.SceneClassifier.SceneClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Classify each scene as:</dt>
+<dd>1- LONG_SHOT
+2- MEDIUM_SHOT
+3- CLOSE_SHOT</dd>
+</dl>
+<p>Also smooth each chunk classification</p>
+<dl class="attribute">
+<dt id="Converter.SceneClassifier.SceneClassifier.CLOSE_SHOT">
+<code class="descname">CLOSE_SHOT</code><em class="property"> = 3</em><a class="headerlink" href="#Converter.SceneClassifier.SceneClassifier.CLOSE_SHOT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="Converter.SceneClassifier.SceneClassifier.LONG_SHOT">
+<code class="descname">LONG_SHOT</code><em class="property"> = 1</em><a class="headerlink" href="#Converter.SceneClassifier.SceneClassifier.LONG_SHOT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="Converter.SceneClassifier.SceneClassifier.MEDIUM_SHOT">
+<code class="descname">MEDIUM_SHOT</code><em class="property"> = 2</em><a class="headerlink" href="#Converter.SceneClassifier.SceneClassifier.MEDIUM_SHOT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="Converter.SceneClassifier.SceneClassifier.classifyImage">
+<em class="property">static </em><code class="descname">classifyImage</code><span class="sig-paren">(</span><em>image</em>, <em>dir_patch_model</em>, <em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.SceneClassifier.SceneClassifier.classifyImage" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>for each image in imageSegment</dt>
+<dd><ol class="first last arabic simple">
+<li>Calculate pitch percentage</li>
+<li>Calculate players percentage</li>
+<li>Compare percentages with corresponding thresholds pitchThreshold, playerThreshold</li>
+<li>Classify the scene according to previous comparison and set sceneClass in Image object</li>
+<li>Compute nonPitch boolean masks and set nonPitchMask in Image object</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="Converter.SceneClassifier.SceneClassifier.smoothSegmentClassification">
+<em class="property">static </em><code class="descname">smoothSegmentClassification</code><span class="sig-paren">(</span><em>image</em>, <em>dir_patch_model</em>, <em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.SceneClassifier.SceneClassifier.smoothSegmentClassification" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smooth the classification of the images of segment to reduce classification errors</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Converter.StereoCreator">
+<span id="converter-stereocreator-module"></span><h2>Converter.StereoCreator module<a class="headerlink" href="#module-Converter.StereoCreator" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Converter.StereoCreator.StereoCreator">
+<em class="property">class </em><code class="descclassname">Converter.StereoCreator.</code><code class="descname">StereoCreator</code><a class="headerlink" href="#Converter.StereoCreator.StereoCreator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Converter.BasicConverter.BasicConverter" title="Converter.BasicConverter.BasicConverter"><code class="xref py py-class docutils literal"><span class="pre">Converter.BasicConverter.BasicConverter</span></code></a></p>
+<p>StereoCreator Converter class, a child from Basic Converter class to handle long shots</p>
+<dl class="staticmethod">
+<dt id="Converter.StereoCreator.StereoCreator.convert">
+<em class="property">static </em><code class="descname">convert</code><span class="sig-paren">(</span><em>image</em>, <em>conversionParam</em>, <em>spcificParameters=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.StereoCreator.StereoCreator.convert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes right_view of the SS from left_view by simple shifting</p>
+<p>This doesn&#8217;t need any specific parameters</p>
+<p>Assumes that the depth is a ramp, and slants the input image accordingly to generate the right view,             The input image is taken as the left view</p>
+<p>It changes the leftImage and rightImage and sideBySide variables in the given image Object</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Converter">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Converter" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Converter package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-Converter.BasicConverter">Converter.BasicConverter module</a></li>
+<li><a class="reference internal" href="#module-Converter.ConversionTask">Converter.ConversionTask module</a></li>
+<li><a class="reference internal" href="#module-Converter.DGC">Converter.DGC module</a></li>
+<li><a class="reference internal" href="#module-Converter.Image">Converter.Image module</a></li>
+<li><a class="reference internal" href="#module-Converter.MotionEstimation">Converter.MotionEstimation module</a></li>
+<li><a class="reference internal" href="#module-Converter.SceneClassifier">Converter.SceneClassifier module</a></li>
+<li><a class="reference internal" href="#module-Converter.StereoCreator">Converter.StereoCreator module</a></li>
+<li><a class="reference internal" href="#module-Converter">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Configuration.html"
+                        title="previous chapter">Configuration package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="DepthDatabase.html"
+                        title="next chapter">DepthDatabase package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/Converter.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, QCRI.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+      |
+      <a href="_sources/Converter.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>

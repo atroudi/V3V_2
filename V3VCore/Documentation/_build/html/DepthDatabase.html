@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>DepthDatabase package &mdash; V3VCore 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="V3VCore 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="IOHandling package" href="IOHandling.html" />
+    <link rel="prev" title="Converter package" href="Converter.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="IOHandling.html" title="IOHandling package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Converter.html" title="Converter package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">V3VCore 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="depthdatabase-package">
+<h1>DepthDatabase package<a class="headerlink" href="#depthdatabase-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-DepthDatabase.BasicDepthDatabase">
+<span id="depthdatabase-basicdepthdatabase-module"></span><h2>DepthDatabase.BasicDepthDatabase module<a class="headerlink" href="#module-DepthDatabase.BasicDepthDatabase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DepthDatabase.BasicDepthDatabase.BasicDepthDatabase">
+<em class="property">class </em><code class="descclassname">DepthDatabase.BasicDepthDatabase.</code><code class="descname">BasicDepthDatabase</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.BasicDepthDatabase.BasicDepthDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parent (Basic) class for all the depth databases used to estimate the depth</p>
+<p>There are features for each image, depth pair calculated to help in 3D conversion</p>
+<p>These features are calculated for multiple profiles (resolution, resizeFactor) pairs</p>
+<dl class="docutils">
+<dt>Variables:</dt>
+<dd><ul class="first">
+<li><p class="first">name: the database folder name</p>
+</li>
+<li><dl class="first docutils">
+<dt>imageDataList: array of ImageData class describing the data needed from the images</dt>
+<dd><p class="first last">ImageData Class contains the path to the raw images and their depths</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>computedProfilesTuple: the previously computed profiles (resolution, resizeFactor) pairs</dt>
+<dd><p class="first last">We use tuple data structure instead of using an object reference to Profile class which can change</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">featuresPathList: maps the key profile to the path of the corresponding features</p>
+</li>
+<li><p class="first">saveSerializedPath: the directory where we save all the serialized data (meta data, features of each profile)</p>
+</li>
+</ul>
+<dl class="last docutils">
+<dt>### The serialized path directory structure:</dt>
+<dd><ul class="first last simple">
+<li>ImageData: containing the variables of this class which is mainly the paths of database images, depthmaps</li>
+<li>features_profile.str(): A folder for each Image features calculated for specific profile</li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Functions:</dt>
+<dd><ul class="first last simple">
+<li>addImageData(imagePath, depthMapPath)</li>
+<li>saveImageData(imageDataPath)</li>
+<li>loadImageData(imageDataPath)</li>
+<li>computeFeatures(conversionParam)</li>
+<li>updateFeatures(startIndex, conversionParam)</li>
+<li>getFeatures(conversionParam)</li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.addImageData">
+<code class="descname">addImageData</code><span class="sig-paren">(</span><em>imagePath</em>, <em>depthMapPath</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.addImageData" title="Permalink to this definition">¶</a></dt>
+<dd><p>1- Add new imageData to the database 
+2- Update the features computed before by computing these feature to the new images
+3- Update the metadata file saved on disk</p>
+<p>The input path can be a file path             or it can be a directory path (loop on all files in this directory)</p>
+<p>The corresponding files of images and depth maps should have the same name
+e.g in the directory, the first image file corresponds to the first depth map file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.computeFeatures">
+<code class="descname">computeFeatures</code><span class="sig-paren">(</span><em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.computeFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute features corresponding to given conversionParam profile to all the images in the database</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.getFeatures">
+<code class="descname">getFeatures</code><span class="sig-paren">(</span><em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.getFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>check if the filePath to the features of conversionParam profile exists 
+then return the featuresList read else compute the features and return it</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.loadImageData">
+<code class="descname">loadImageData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.loadImageData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the image data from the given self.saveSerializedPath</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.saveImageData">
+<code class="descname">saveImageData</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.saveImageData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the image data to the given self.saveSerializedPath</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.updateFeatures">
+<code class="descname">updateFeatures</code><span class="sig-paren">(</span><em>startIndex</em>, <em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.BasicDepthDatabase.BasicDepthDatabase.updateFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>compute features corresponding to given conversionParam profile to the images 
+that isn&#8217;t included in the previously computed features</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DepthDatabase.BasicDepthDatabase.Profile">
+<em class="property">class </em><code class="descclassname">DepthDatabase.BasicDepthDatabase.</code><code class="descname">Profile</code><span class="sig-paren">(</span><em>resolution</em>, <em>resizeFactor</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.BasicDepthDatabase.Profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is just a resolution, resizeFactor pair to identify different profiles to which features are calculated</p>
+<dl class="method">
+<dt id="DepthDatabase.BasicDepthDatabase.Profile.str">
+<code class="descname">str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.BasicDepthDatabase.Profile.str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DepthDatabase.Data">
+<span id="depthdatabase-data-module"></span><h2>DepthDatabase.Data module<a class="headerlink" href="#module-DepthDatabase.Data" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DepthDatabase.Data.ImageData">
+<em class="property">class </em><code class="descclassname">DepthDatabase.Data.</code><code class="descname">ImageData</code><span class="sig-paren">(</span><em>imagePath</em>, <em>depthMapPath</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.Data.ImageData" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a private class for the database classes representing the image data needed</p>
+<p>This class should be serializable to be able to save it to permanent storage</p>
+<dl class="docutils">
+<dt>Variables:</dt>
+<dd><ul class="first last simple">
+<li>imagePath</li>
+<li>depthMapPath</li>
+</ul>
+</dd>
+<dt>Functions:</dt>
+<dd><ul class="first last simple">
+<li>computeFeatures(profile)</li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="DepthDatabase.Data.ImageData.computeFeatures">
+<code class="descname">computeFeatures</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.Data.ImageData.computeFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>1- Read the image and the depthMap
+2- Resize them to the needed resolution and resizeFactor
+3- Compute the ImageFeatures for the given profile
+4- Return the features</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DepthDatabase.Data.ImageFeatures">
+<em class="property">class </em><code class="descclassname">DepthDatabase.Data.</code><code class="descname">ImageFeatures</code><span class="sig-paren">(</span><em>image</em>, <em>depth</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.Data.ImageFeatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for all the image features needed Fm, Bm, Gx, Gy
+and the methods needed to compute them from the image and its depth</p>
+<p>This class should be serializable to be able to save it to permanent storage</p>
+<p>Compute image Features for the given image, depth map</p>
+<dl class="method">
+<dt id="DepthDatabase.Data.ImageFeatures.computeBm">
+<code class="descname">computeBm</code><span class="sig-paren">(</span><em>image</em>, <em>depth</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.Data.ImageFeatures.computeBm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Bm for the given image and depth map</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DepthDatabase.Data.ImageFeatures.computeFm">
+<code class="descname">computeFm</code><span class="sig-paren">(</span><em>image</em>, <em>depth</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.Data.ImageFeatures.computeFm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Fm for the given image and depth map</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DepthDatabase.Data.ImageFeatures.computeGxGy">
+<code class="descname">computeGxGy</code><span class="sig-paren">(</span><em>image</em>, <em>depth</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.Data.ImageFeatures.computeGxGy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute Gx, Gy for the given image and depth map</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="DepthDatabase.Data.ImageFeaturesList">
+<em class="property">class </em><code class="descclassname">DepthDatabase.Data.</code><code class="descname">ImageFeaturesList</code><span class="sig-paren">(</span><em>profile</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.Data.ImageFeaturesList" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of image features corresponding to specific profile, this class</p>
+<p>initialize an empty list of image features to the given profile</p>
+<p>Next you can call loadImageFeaturesList to check if there is already computed features to this profile</p>
+<dl class="method">
+<dt id="DepthDatabase.Data.ImageFeaturesList.loadImageFeaturesList">
+<code class="descname">loadImageFeaturesList</code><span class="sig-paren">(</span><em>dirPath</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.Data.ImageFeaturesList.loadImageFeaturesList" title="Permalink to this definition">¶</a></dt>
+<dd><p>load current image feature list from the given dirPath/features_profile.str()
+if the file is not found it sets the list to empty list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="DepthDatabase.Data.ImageFeaturesList.saveImageFeaturesList">
+<code class="descname">saveImageFeaturesList</code><span class="sig-paren">(</span><em>dirPath</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.Data.ImageFeaturesList.saveImageFeaturesList" title="Permalink to this definition">¶</a></dt>
+<dd><p>save current image feature list in the given dirPath/features_profile.str()
+erasing any previous file with the same name and saving instead the new list
+returns the path where it saves this file</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-DepthDatabase.SoccerDepthDatabase">
+<span id="depthdatabase-soccerdepthdatabase-module"></span><h2>DepthDatabase.SoccerDepthDatabase module<a class="headerlink" href="#module-DepthDatabase.SoccerDepthDatabase" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="DepthDatabase.SoccerDepthDatabase.SoccerDepthDatabase">
+<em class="property">class </em><code class="descclassname">DepthDatabase.SoccerDepthDatabase.</code><code class="descname">SoccerDepthDatabase</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#DepthDatabase.SoccerDepthDatabase.SoccerDepthDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#DepthDatabase.BasicDepthDatabase.BasicDepthDatabase" title="DepthDatabase.BasicDepthDatabase.BasicDepthDatabase"><code class="xref py py-class docutils literal"><span class="pre">DepthDatabase.BasicDepthDatabase.BasicDepthDatabase</span></code></a></p>
+<p>A child class from BasicDepthDatabase Specific for soccer games</p>
+<p>Overriding general methods of computingFeatures to have specific features for this kind of database</p>
+<p>for example: in the ImageData class we can have a method called computeFeaturesSoccer specific for soccer databases
+and we use this function instead of the general computeFeatures method</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-DepthDatabase">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-DepthDatabase" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">DepthDatabase package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-DepthDatabase.BasicDepthDatabase">DepthDatabase.BasicDepthDatabase module</a></li>
+<li><a class="reference internal" href="#module-DepthDatabase.Data">DepthDatabase.Data module</a></li>
+<li><a class="reference internal" href="#module-DepthDatabase.SoccerDepthDatabase">DepthDatabase.SoccerDepthDatabase module</a></li>
+<li><a class="reference internal" href="#module-DepthDatabase">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Converter.html"
+                        title="previous chapter">Converter package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="IOHandling.html"
+                        title="next chapter">IOHandling package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/DepthDatabase.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, QCRI.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.3</a>
+      
+      |
+      <a href="_sources/DepthDatabase.txt"
+          rel="nofollow">Page source</a></li>
+    </div>
+
+    
+
+    
+  </body>
+</html>
