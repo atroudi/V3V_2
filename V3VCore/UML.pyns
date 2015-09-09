@@ -1,0 +1,48 @@
+# PynSource Version 1.1
+{'type':'meta', 'info1':'Lorem ipsum dolor sit amet, consectetur adipiscing elit is latin.'}
+{'type':'umlshape', 'id':'BasicConverter', 'x':150, 'y':441, 'width':128, 'height':62, 'attrs':'', 'meths':'convert'}
+{'type':'umlshape', 'id':'ConversionTask', 'x':404, 'y':454, 'width':128, 'height':62, 'attrs':'', 'meths':'convert'}
+{'type':'umlshape', 'id':'DGC', 'x':264, 'y':595, 'width':142, 'height':101, 'attrs':'', 'meths':'convert|DepthGradientEstimator|DepthConstructor|StereoCreatorFromDepth'}
+{'type':'umlshape', 'id':'ImageInfo', 'x':41, 'y':251, 'width':88, 'height':189, 'attrs':'originalImage|leftImage|rightImage|sideBySide|depth|nonPitchMask|sceneClass|Gx|Gy', 'meths':'__init__'}
+{'type':'umlshape', 'id':'MotionEstimation', 'x':393, 'y':248, 'width':144, 'height':62, 'attrs':'', 'meths':'estimateMotion'}
+{'type':'umlshape', 'id':'SceneClassifier', 'x':799, 'y':373, 'width':172, 'height':124, 'attrs':'LONG_SHOT|MEDIUM_SHOT|CLOSE_SHOT', 'meths':'classifyImage|smoothSegmentClassification'}
+{'type':'umlshape', 'id':'StereoCreator', 'x':53, 'y':629, 'width':119, 'height':62, 'attrs':'', 'meths':'convert'}
+{'type':'umlshape', 'id':'ConversionParameters', 'x':196, 'y':90, 'width':178, 'height':241, 'attrs':'resolution|resizeFactor|maxDisp|K|pitchThreshold_1|pitchThreshold_2|playerThreshold|segmentSize|alpha|FmSize|SIFTSize|blockSize|colorWeight', 'meths':'__init__'}
+{'type':'umlshape', 'id':'Resolution', 'x':42, 'y':27, 'width':94, 'height':88, 'attrs':'HD|FULLHD|FOURK', 'meths':''}
+{'type':'umlshape', 'id':'ResizeFactor', 'x':13, 'y':136, 'width':111, 'height':101, 'attrs':'ONE|TWO|FOUR|EIGHT', 'meths':''}
+{'type':'umlshape', 'id':'Profile', 'x':1109, 'y':390, 'width':82, 'height':111, 'attrs':'resolution|resizeFactor', 'meths':'__init__|str'}
+{'type':'umlshape', 'id':'BasicDepthDatabase', 'x':1096, 'y':45, 'width':161, 'height':215, 'attrs':'imageDataList|name|saveSerializedPath|computedProfilesTuple|featuresPathList', 'meths':'__init__|addImageData|saveImageData|loadImageData|computeFeatures|updateFeatures|getFeatures'}
+{'type':'umlshape', 'id':'ImageData', 'x':762, 'y':86, 'width':86, 'height':29, 'attrs':'', 'meths':''}
+{'type':'umlshape', 'id':'ImageFeatures', 'x':511, 'y':14, 'width':119, 'height':163, 'attrs':'Fm|Bm|Gx|Gy', 'meths':'__init__|computeFm|computeBm|computeGxGy'}
+{'type':'umlshape', 'id':'ImageFeaturesList', 'x':659, 'y':198, 'width':153, 'height':124, 'attrs':'featuresList|profile', 'meths':'__init__|saveImageFeaturesList|loadImageFeaturesList'}
+{'type':'umlshape', 'id':'SoccerDepthDatabase', 'x':876, 'y':18, 'width':170, 'height':29, 'attrs':'', 'meths':''}
+{'type':'umlshape', 'id':'InputInterface', 'x':482, 'y':340, 'width':128, 'height':62, 'attrs':'', 'meths':'loadFromDisk'}
+{'type':'umlshape', 'id':'InputProcessor', 'x':482, 'y':629, 'width':128, 'height':62, 'attrs':'', 'meths':'processInput'}
+{'type':'umlshape', 'id':'OutputInterface', 'x':757, 'y':519, 'width':136, 'height':62, 'attrs':'', 'meths':'saveToDisk'}
+{'type':'umlshape', 'id':'OutputProcessor', 'x':662, 'y':638, 'width':136, 'height':62, 'attrs':'', 'meths':'processOutput'}
+{'type':'umlshape', 'id':'InternalConfiguration', 'x':881, 'y':634, 'width':186, 'height':62, 'attrs':'dataBasePath', 'meths':''}
+{'type':'edge', 'id':'DGC_to_BasicConverter', 'source':'DGC', 'target':'BasicConverter', 'uml_edge_type':'generalisation'}
+{'type':'edge', 'id':'StereoCreator_to_BasicConverter', 'source':'StereoCreator', 'target':'BasicConverter', 'uml_edge_type':'generalisation'}
+{'type':'edge', 'id':'Resolution_to_ConversionParameters', 'source':'Resolution', 'target':'ConversionParameters', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'ResizeFactor_to_ConversionParameters', 'source':'ResizeFactor', 'target':'ConversionParameters', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'ImageData_to_BasicDepthDatabase', 'source':'ImageData', 'target':'BasicDepthDatabase', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'SoccerDepthDatabase_to_BasicDepthDatabase', 'source':'SoccerDepthDatabase', 'target':'BasicDepthDatabase', 'uml_edge_type':'generalisation'}
+{'type':'edge', 'id':'BasicConverter_to_ConversionTask', 'source':'BasicConverter', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'SceneClassifier_to_ConversionTask', 'source':'SceneClassifier', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'OutputProcessor_to_ConversionTask', 'source':'OutputProcessor', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'InputProcessor_to_ConversionTask', 'source':'InputProcessor', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'InputInterface_to_ConversionTask', 'source':'InputInterface', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'OutputInterface_to_ConversionTask', 'source':'OutputInterface', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'ConversionParameters_to_BasicDepthDatabase', 'source':'ConversionParameters', 'target':'BasicDepthDatabase', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'ConversionParameters_to_ConversionTask', 'source':'ConversionParameters', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'BasicDepthDatabase_to_ConversionTask', 'source':'BasicDepthDatabase', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'ImageFeaturesList_to_BasicDepthDatabase', 'source':'ImageFeaturesList', 'target':'BasicDepthDatabase', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'ImageFeatures_to_ImageFeaturesList', 'source':'ImageFeatures', 'target':'ImageFeaturesList', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'ImageFeatures_to_ImageData', 'source':'ImageFeatures', 'target':'ImageData', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'Profile_to_BasicDepthDatabase', 'source':'Profile', 'target':'BasicDepthDatabase', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'ImageInfo_to_ConversionTask', 'source':'ImageInfo', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'InternalConfiguration_to_ConversionTask', 'source':'InternalConfiguration', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'InternalConfiguration_to_BasicDepthDatabase', 'source':'InternalConfiguration', 'target':'BasicDepthDatabase', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'MotionEstimation_to_ConversionTask', 'source':'MotionEstimation', 'target':'ConversionTask', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'BasicDepthDatabase_to_DGC', 'source':'BasicDepthDatabase', 'target':'DGC', 'uml_edge_type':'composition'}
+{'type':'edge', 'id':'ConversionParameters_to_BasicConverter', 'source':'ConversionParameters', 'target':'BasicConverter', 'uml_edge_type':'composition'}
