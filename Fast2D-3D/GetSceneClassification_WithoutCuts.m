@@ -22,6 +22,47 @@ green_closeup = 0.4;       %%green_percentage thershold for closeups
 %global optmixture;
 no_frames = size(Query_rgb_original,4);
 
+% Each 100 frames take a sample screen shot
+% save this screen shot in a specific directory numbered 1.png, 2.png, ....
+% save a corresponding pitch map initially all the maps are zeros (black)
+% These pitch maps are numbers 1m.png, 2m.png, ....
+% These should be edited by the user by marking the pitch areas with a non
+% zero value 
+samples_num = 1;
+v = size(Query_rgb_original, 1);
+h = size(Query_rgb_original, 2);
+false_mask = false(v, h);
+if exist([root '/Pitch Masks/'], 'dir') == 7
+    rmdir([root '/Pitch Masks/'], 's');
+end
+mkdir(root, 'Pitch Masks');
+for fr = 1:100:no_frames
+    imwrite(Query_rgb_original(:, :, :, fr), [root '/Pitch Masks/' num2str(samples_num) '.png'], 'png');
+    imwrite(false_mask, [root '/Pitch Masks/' num2str(samples_num) 'm.png'], 'png');
+    samples_num = samples_num + 1;
+end
+
+while 1
+    str = input('Type "C" When pitch masks are ready: ', 's');
+    
+    if strcmpi(str, 'c') == 0
+        disp('You did not enter "C", Try Again')
+    else
+        changed = 0; 
+        for fr = 1:samples_num
+            % sum of all values of array = 0, then no change
+            % otherwise there is a change add to changed_masks array
+            % set changed boolean to true 
+        end
+        % if there has been any change then break
+        if changed == 1
+            break
+        end
+    end
+end
+
+% loop on all the changed_masks calling DetectMainPitch
+
 optmixture_all=load([root '/LinePitchModel.mat']);
 optmixture=optmixture_all.optmixture;
 
@@ -33,15 +74,13 @@ GMM_threshold = -20;
 
 CLASS = uint8(nan(1,numel(no_frames)));
 
-
 vres= ceil(size(Query_rgb_original,1)*resize_factor);
 hres= ceil(size(Query_rgb_original,2)*resize_factor);
 num_pels = vres*hres;
 
 masks= false(vres, hres, no_frames);
 
-
-parfor fr =1:no_frames
+for fr =1:no_frames
   
     imfill_sum = 0;
     green_sum = 0;

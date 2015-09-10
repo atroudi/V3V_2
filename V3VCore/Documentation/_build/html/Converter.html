@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Converter package &mdash; V3VCore 0.0.1 documentation</title>
+    <title>Converter package &mdash; V3V 1.0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.1',
+        VERSION:     '1.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="V3VCore 0.0.1 documentation" href="index.html" />
+    <link rel="top" title="V3V 1.0.0 documentation" href="index.html" />
     <link rel="next" title="DepthDatabase package" href="DepthDatabase.html" />
     <link rel="prev" title="Configuration package" href="Configuration.html" />
    
@@ -47,7 +47,7 @@
         <li class="right" >
           <a href="Configuration.html" title="Configuration package"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">V3VCore 0.0.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">V3V 1.0.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -184,6 +184,91 @@ and copy the depth gradients (Gx, Gy) from the best matching block to the query<
 </dd></dl>
 
 </div>
+<div class="section" id="module-Converter.DGC_GlobalStereoParameters">
+<span id="converter-dgc-globalstereoparameters-module"></span><h2>Converter.DGC_GlobalStereoParameters module<a class="headerlink" href="#module-Converter.DGC_GlobalStereoParameters" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="Converter.DGC_GlobalStereoParameters.DGC_GlobalStereoParameters">
+<em class="property">class </em><code class="descclassname">Converter.DGC_GlobalStereoParameters.</code><code class="descname">DGC_GlobalStereoParameters</code><span class="sig-paren">(</span><em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_GlobalStereoParameters.DGC_GlobalStereoParameters" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="Converter.DGC_GlobalStereoParameters.DGC_GlobalStereoParameters.calculateVideoGradients_noMotion">
+<code class="descname">calculateVideoGradients_noMotion</code><span class="sig-paren">(</span><em>h</em>, <em>w</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_GlobalStereoParameters.DGC_GlobalStereoParameters.calculateVideoGradients_noMotion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-Converter.DGC_StereoConverter">
+<span id="converter-dgc-stereoconverter-module"></span><h2>Converter.DGC_StereoConverter module<a class="headerlink" href="#module-Converter.DGC_StereoConverter" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="Converter.DGC_StereoConverter.DGC_StereoConvertor">
+<code class="descclassname">Converter.DGC_StereoConverter.</code><code class="descname">DGC_StereoConvertor</code><span class="sig-paren">(</span><em>imageInfoObjects</em>, <em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_StereoConverter.DGC_StereoConvertor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>For each frame:</dt>
+<dd><ol class="first last arabic simple">
+<li>Calculate the global parameters initialization according to the spatialSmoothnessSwitch</li>
+<li>Temporally Smooth the depth (if needed, there can be switch for temporal smoothness)</li>
+<li>For each image and its smoothed depth, calculate the SideBySide image by using ViewInterpolation method</li>
+</ol>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="Converter.DGC_StereoConverter.depthTemporalSmoothness">
+<code class="descclassname">Converter.DGC_StereoConverter.</code><code class="descname">depthTemporalSmoothness</code><span class="sig-paren">(</span><em>imageInfoObjects</em>, <em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_StereoConverter.depthTemporalSmoothness" title="Permalink to this definition">¶</a></dt>
+<dd><p>Temporally Smooth the depth according temporalSmoothnessSwitch</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Converter.DGC_StereoConverter.gauss">
+<code class="descclassname">Converter.DGC_StereoConverter.</code><code class="descname">gauss</code><span class="sig-paren">(</span><em>n</em>, <em>sigma</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_StereoConverter.gauss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gauss distribution for n points with variance sigma used in depth temporal smoothness</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-Converter.DGC_ViewInterpolation">
+<span id="converter-dgc-viewinterpolation-module"></span><h2>Converter.DGC_ViewInterpolation module<a class="headerlink" href="#module-Converter.DGC_ViewInterpolation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="Converter.DGC_ViewInterpolation.ViewInterpolation">
+<code class="descclassname">Converter.DGC_ViewInterpolation.</code><code class="descname">ViewInterpolation</code><span class="sig-paren">(</span><em>curImageInfo</em>, <em>conversionParam</em>, <em>globalParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_ViewInterpolation.ViewInterpolation" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes the image and its depth and calculates the SideBySide image 
+by using stereoWarpK_noMotion_singleSided function</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="Converter.DGC_ViewInterpolation.clip">
+<code class="descclassname">Converter.DGC_ViewInterpolation.</code><code class="descname">clip</code><span class="sig-paren">(</span><em>v</em>, <em>bds=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_ViewInterpolation.clip" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Converter.DGC_ViewInterpolation.imnormalize">
+<code class="descclassname">Converter.DGC_ViewInterpolation.</code><code class="descname">imnormalize</code><span class="sig-paren">(</span><em>img</em>, <em>low_prc=None</em>, <em>up_prc=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_ViewInterpolation.imnormalize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Converter.DGC_ViewInterpolation.sigmoid">
+<code class="descclassname">Converter.DGC_ViewInterpolation.</code><code class="descname">sigmoid</code><span class="sig-paren">(</span><em>x</em>, <em>center</em>, <em>scale</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_ViewInterpolation.sigmoid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="Converter.DGC_ViewInterpolation.stereoWarpK_noMotion_singleSided">
+<code class="descclassname">Converter.DGC_ViewInterpolation.</code><code class="descname">stereoWarpK_noMotion_singleSided</code><span class="sig-paren">(</span><em>curImageInfo</em>, <em>conversionParam</em>, <em>globalParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_ViewInterpolation.stereoWarpK_noMotion_singleSided" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function warps an image sequence (with corresponding flow and depth) to a stereo sequence</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>First of all it uses a heuristic to calculate initial depth</li>
+</ol>
+<p>2) Then, It smooth this initial depth by spatial smoothness if needed
+4) After that, it warps the image and does interpolation to generate the right image                it pushes the pixels [to the right] as the depth increases</p>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="Converter.DGC_ViewInterpolation.warpImage_v2">
+<code class="descclassname">Converter.DGC_ViewInterpolation.</code><code class="descname">warpImage_v2</code><span class="sig-paren">(</span><em>im</em>, <em>vx</em>, <em>R</em>, <em>xx</em>, <em>yy</em>, <em>YY</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.DGC_ViewInterpolation.warpImage_v2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
 <div class="section" id="module-Converter.Image">
 <span id="converter-image-module"></span><h2>Converter.Image module<a class="headerlink" href="#module-Converter.Image" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
@@ -194,10 +279,12 @@ and copy the depth gradients (Gx, Gy) from the best matching block to the query<
 <dt>Parameters:</dt>
 <dd><ul class="first last simple">
 <li>originalImage: the original RGB image (Input)</li>
+<li>originalImageResized: the Resized original RGB image (Input)</li>
 <li>leftImage: (now it is just the original image)</li>
 <li>rightImage: (it is estimated according to the depth at Converter)</li>
 <li>sideBySide: the stereo image (putting the left and right image side by side in one image)</li>
 <li>depth: The corresponding greyscale depth map (width x height) (done at Converter)</li>
+<li>depthResized: the Resized depth map</li>
 <li>nonPitchMask: 2D boolean array (1 nonPitch, 0 pitch) needed in DGC (done at sceneClassifier)</li>
 <li>sceneClass: Integer representing the classification of this image (done at sceneClassifier)</li>
 <li>Gx, Gy: Arrays representing the gradients of the image (estimated at DGC)</li>
@@ -252,7 +339,7 @@ Returns NULL in case of error</p>
 
 <dl class="staticmethod">
 <dt id="Converter.SceneClassifier.SceneClassifier.classifyImage">
-<em class="property">static </em><code class="descname">classifyImage</code><span class="sig-paren">(</span><em>image</em>, <em>dir_patch_model</em>, <em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.SceneClassifier.SceneClassifier.classifyImage" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">classifyImage</code><span class="sig-paren">(</span><em>image</em>, <em>pitchModelPath</em>, <em>conversionParam</em><span class="sig-paren">)</span><a class="headerlink" href="#Converter.SceneClassifier.SceneClassifier.classifyImage" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>for each image in imageSegment</dt>
 <dd><ol class="first last arabic simple">
@@ -312,6 +399,9 @@ Returns NULL in case of error</p>
 <li><a class="reference internal" href="#module-Converter.BasicConverter">Converter.BasicConverter module</a></li>
 <li><a class="reference internal" href="#module-Converter.ConversionTask">Converter.ConversionTask module</a></li>
 <li><a class="reference internal" href="#module-Converter.DGC">Converter.DGC module</a></li>
+<li><a class="reference internal" href="#module-Converter.DGC_GlobalStereoParameters">Converter.DGC_GlobalStereoParameters module</a></li>
+<li><a class="reference internal" href="#module-Converter.DGC_StereoConverter">Converter.DGC_StereoConverter module</a></li>
+<li><a class="reference internal" href="#module-Converter.DGC_ViewInterpolation">Converter.DGC_ViewInterpolation module</a></li>
 <li><a class="reference internal" href="#module-Converter.Image">Converter.Image module</a></li>
 <li><a class="reference internal" href="#module-Converter.MotionEstimation">Converter.MotionEstimation module</a></li>
 <li><a class="reference internal" href="#module-Converter.SceneClassifier">Converter.SceneClassifier module</a></li>

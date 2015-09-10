@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Configuration package &mdash; V3VCore 0.0.1 documentation</title>
+    <title>Configuration package &mdash; V3V 1.0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.1',
+        VERSION:     '1.0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,9 +23,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="V3VCore 0.0.1 documentation" href="index.html" />
+    <link rel="top" title="V3V 1.0.0 documentation" href="index.html" />
     <link rel="next" title="Converter package" href="Converter.html" />
-    <link rel="prev" title="Welcome to V3VCore’s documentation!" href="index.html" />
+    <link rel="prev" title="Welcome to V3V’s documentation!" href="index.html" />
    
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
@@ -45,9 +45,9 @@
           <a href="Converter.html" title="Converter package"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="Welcome to V3VCore’s documentation!"
+          <a href="index.html" title="Welcome to V3V’s documentation!"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">V3VCore 0.0.1 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">V3V 1.0.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -65,7 +65,7 @@
 <span id="configuration-conversionparameters-module"></span><h2>Configuration.ConversionParameters module<a class="headerlink" href="#module-Configuration.ConversionParameters" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="Configuration.ConversionParameters.ConversionParameters">
-<em class="property">class </em><code class="descclassname">Configuration.ConversionParameters.</code><code class="descname">ConversionParameters</code><span class="sig-paren">(</span><em>resolution=None</em>, <em>resizeFactor=None</em>, <em>maxDisp=None</em>, <em>K=None</em>, <em>pitchThreshold_1=None</em>, <em>pitchThreshold_2=None</em>, <em>playerThreshold=None</em>, <em>segmentSize=None</em>, <em>alpha=None</em>, <em>FmSize=None</em>, <em>SIFTSize=None</em>, <em>blockSize=None</em>, <em>colorWeight=None</em><span class="sig-paren">)</span><a class="headerlink" href="#Configuration.ConversionParameters.ConversionParameters" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">Configuration.ConversionParameters.</code><code class="descname">ConversionParameters</code><span class="sig-paren">(</span><em>resolution=(720</em>, <em>640)</em>, <em>resizeFactor=0.25</em>, <em>maxDisp=20</em>, <em>K=None</em>, <em>pitchThreshold_1=None</em>, <em>pitchThreshold_2=None</em>, <em>playerThreshold=None</em>, <em>segmentSize=None</em>, <em>alpha=None</em>, <em>FmSize=None</em>, <em>SIFTSize=None</em>, <em>blockSize=None</em>, <em>colorWeight=None</em>, <em>spatialSmoothnessSwitch=True</em>, <em>temporalSmoothnessWindow=4</em>, <em>temporalSmoothnessSwitch=True</em>, <em>spatialSmoothCoeff_x=20</em>, <em>spatialSmoothCoeff_y=4</em>, <em>gaussianSigma=2</em><span class="sig-paren">)</span><a class="headerlink" href="#Configuration.ConversionParameters.ConversionParameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Contains all the parameters needed for 2D-3D conversion task</p>
 <p>Some of them can be defined by users to control the 3D quality and the conversion time</p>
 <p>Others are predefined and tuned by developers for best performance</p>
@@ -111,6 +111,19 @@
 </dd>
 </dl>
 </li>
+<li><dl class="first docutils">
+<dt>All next parameters are used in DGC_StereoCreator from DGC estimated depth  </dt>
+<dd><ul class="first last simple">
+<li>spatialSmoothnessSwitch</li>
+<li>temporalSmoothnessWindow</li>
+<li>temporalSmoothnessSwitch</li>
+<li>gaussianSigma</li>
+<li>spatialSmoothCoeff_x</li>
+<li>spatialSmoothCoeff_y</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 </dl>
@@ -119,15 +132,11 @@
 <dl class="class">
 <dt id="Configuration.ConversionParameters.ResizeFactor">
 <em class="property">class </em><code class="descclassname">Configuration.ConversionParameters.</code><code class="descname">ResizeFactor</code><a class="headerlink" href="#Configuration.ConversionParameters.ResizeFactor" title="Permalink to this definition">¶</a></dt>
-<dd><p>This Class contains all the resize factors supported</p>
+<dd><p>This Class contains all the resize factors supported
+The value is the resize factor</p>
 <dl class="attribute">
-<dt id="Configuration.ConversionParameters.ResizeFactor.EIGHT">
-<code class="descname">EIGHT</code><em class="property"> = 4</em><a class="headerlink" href="#Configuration.ConversionParameters.ResizeFactor.EIGHT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="Configuration.ConversionParameters.ResizeFactor.FOUR">
-<code class="descname">FOUR</code><em class="property"> = 3</em><a class="headerlink" href="#Configuration.ConversionParameters.ResizeFactor.FOUR" title="Permalink to this definition">¶</a></dt>
+<dt id="Configuration.ConversionParameters.ResizeFactor.HALF">
+<code class="descname">HALF</code><em class="property"> = 0.5</em><a class="headerlink" href="#Configuration.ConversionParameters.ResizeFactor.HALF" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -136,8 +145,8 @@
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="Configuration.ConversionParameters.ResizeFactor.TWO">
-<code class="descname">TWO</code><em class="property"> = 2</em><a class="headerlink" href="#Configuration.ConversionParameters.ResizeFactor.TWO" title="Permalink to this definition">¶</a></dt>
+<dt id="Configuration.ConversionParameters.ResizeFactor.QUARTER">
+<code class="descname">QUARTER</code><em class="property"> = 0.25</em><a class="headerlink" href="#Configuration.ConversionParameters.ResizeFactor.QUARTER" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -145,7 +154,8 @@
 <dl class="class">
 <dt id="Configuration.ConversionParameters.Resolution">
 <em class="property">class </em><code class="descclassname">Configuration.ConversionParameters.</code><code class="descname">Resolution</code><a class="headerlink" href="#Configuration.ConversionParameters.Resolution" title="Permalink to this definition">¶</a></dt>
-<dd><p>This Class contains all the resolutions supported</p>
+<dd><p>This Class contains all the resolutions supported
+The value is the (vertical pixels no., horizontal pixel no.) &#8211; needs updating</p>
 <dl class="attribute">
 <dt id="Configuration.ConversionParameters.Resolution.FOURK">
 <code class="descname">FOURK</code><em class="property"> = 3</em><a class="headerlink" href="#Configuration.ConversionParameters.Resolution.FOURK" title="Permalink to this definition">¶</a></dt>
@@ -158,7 +168,7 @@
 
 <dl class="attribute">
 <dt id="Configuration.ConversionParameters.Resolution.HD">
-<code class="descname">HD</code><em class="property"> = 1</em><a class="headerlink" href="#Configuration.ConversionParameters.Resolution.HD" title="Permalink to this definition">¶</a></dt>
+<code class="descname">HD</code><em class="property"> = (720, 640)</em><a class="headerlink" href="#Configuration.ConversionParameters.Resolution.HD" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -194,7 +204,7 @@ For a more advanced concept, see the classmethod builtin.</p>
 </ul>
 <dl class="attribute">
 <dt id="Configuration.InternalConfiguration.InternalConfiguration.dataBasePath">
-<code class="descname">dataBasePath</code><em class="property"> = '/Users/OmarEltobgy/Dropbox/Workspace/V3VCore'</em><a class="headerlink" href="#Configuration.InternalConfiguration.InternalConfiguration.dataBasePath" title="Permalink to this definition">¶</a></dt>
+<code class="descname">dataBasePath</code><em class="property"> = '/Users/OmarEltobgy/Documents/V3V/V3VCore/'</em><a class="headerlink" href="#Configuration.InternalConfiguration.InternalConfiguration.dataBasePath" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -224,7 +234,7 @@ For a more advanced concept, see the classmethod builtin.</p>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to V3VCore&#8217;s documentation!</a></p>
+                        title="previous chapter">Welcome to V3V&#8217;s documentation!</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="Converter.html"
                         title="next chapter">Converter package</a></p>

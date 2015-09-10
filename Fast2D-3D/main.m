@@ -32,7 +32,8 @@ p.SpatialSmoothness =0;
 p.sigma = 3;
 p.temporal_window = 5;
 p.refine_pitch_model = 0; %if 1 then the pitch model will be updated based on the dominant color
-        
+maxNumCompThreads = 1;
+
 switch Profile
     case 0                         % Lowest profile (low quality)
         p.k = 1; %% KNN
@@ -216,7 +217,7 @@ switch p.resize_factor
 end
 
 
-poolobj = parpool(maxNumCompThreads);
+%poolobj = parpool(maxNumCompThreads);
  
 Dataset_Fm = uint8(Dataset_Fm);
 Dataset_SIFT = uint8(Dataset_SIFT);
@@ -408,4 +409,3 @@ run_time = toc;
     
 end
     
-delete(poolobj)

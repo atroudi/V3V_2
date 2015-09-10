@@ -21,8 +21,6 @@ from django.http.request import QueryDict
 from rest_framework.decorators import renderer_classes
 from rest_framework.renderers import TemplateHTMLRenderer
 
-
-
 class Segment2DViewSet(viewsets.ModelViewSet):
     """
     Segment2D resource.
