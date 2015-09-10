@@ -22,53 +22,59 @@ green_closeup = 0.4;       %%green_percentage thershold for closeups
 %global optmixture;
 no_frames = size(Query_rgb_original,4);
 
-% Each 100 frames take a sample screen shot
+% Each step frames take a sample screen shot
 % save this screen shot in a specific directory numbered 1.png, 2.png, ....
 % save a corresponding pitch map initially all the maps are zeros (black)
 % These pitch maps are numbers 1m.png, 2m.png, ....
 % These should be edited by the user by marking the pitch areas with a non
 % zero value 
-samples_num = 1;
-v = size(Query_rgb_original, 1);
-h = size(Query_rgb_original, 2);
-false_mask = false(v, h);
+samples_num = 0;
 if exist([root '/PitchMasks/'], 'dir') == 7
     rmdir([root '/PitchMasks/'], 's');
 end
 mkdir(root, 'PitchMasks');
-step = 100;
+step = 2;
 for fr = 1:step:no_frames
-    imwrite(Query_rgb_original(:, :, :, fr), [root '/PitchMasks/' num2str(samples_num) '.png'], 'png');
-    imwrite(false_mask, [root '/PitchMasks/' num2str(samples_num) 'm.png'], 'png');
     samples_num = samples_num + 1;
+    imwrite(Query_rgb_original(:, :, :, fr), [root '/PitchMasks/' num2str(samples_num) '.png'], 'png');
+    imwrite(Query_rgb_original(:, :, :, fr), [root '/PitchMasks/' 'M' num2str(samples_num) '.png'], 'png');
 end
 
+changed_masks = [];
 while 1
-    str = input('Type "C" When pitch masks are ready: ', 's');
+    str = input('Type "C" When you have finished changing Pitch Masks or you want to use default LinePitchModel: ', 's');
     
     if strcmpi(str, 'c') == 0
         disp('You did not enter "C", Try Again')
     else
-        changed = 0; 
+        changed = 0;
+        changed_masks = [];
         for fr = 1:samples_num
             % sum of all values of array = 0, then no change
             % otherwise there is a change add to changed_masks array
             % set changed boolean to true
+            I = double(imread([root '/PitchMasks/' num2str(fr) '.png']));
+            M = double(imread([root '/PitchMasks/' 'M' num2str(fr) '.png']));
+            if max(max(max(abs(I-M)))) ~= 0
+                changed = 1;
+                changed_masks = [changed_masks fr];
+            end
         end
         % if there has been any change then break
         if changed == 1
+            optmixture = TrainPitchModel([root '/PitchMasks/'], changed_masks);
+            break
+        else
+            optmixture_all = load([root '/LinePitchModel.mat']);
+            optmixture = optmixture_all.optmixture;
             break
         end
     end
 end
 
-% loop on all the changed_masks calling DetectMainPitch
-
-optmixture_all=load([root '/LinePitchModel.mat']);
-optmixture=optmixture_all.optmixture;
 
 if refine_pitch_model ==1
-optmixture= DetectMainPitch(cat(4,Query_rgb_original(:,:,:,1),Query_rgb_original(:,:,:,floor(end/2)),Query_rgb_original(:,:,:,end)),optmixture,resize_factor,25, 0.8,-150);
+    optmixture= DetectMainPitch(cat(4,Query_rgb_original(:,:,:,1),Query_rgb_original(:,:,:,floor(end/2)),Query_rgb_original(:,:,:,end)),optmixture,resize_factor,25, 0.8,-150);
 end
 
 GMM_threshold = -20;

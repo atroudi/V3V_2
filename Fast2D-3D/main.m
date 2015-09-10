@@ -11,7 +11,7 @@ change = 0; % if there was any change in the Database , block_size, resize_facto
 Query_Paths = ['Data_Size_Seq/';];
 Ref_Path =    ['Database/Run1         ';'Database/Run2         ';'Database/Run3         ';'Database/Run4         ';'Database/Run5         ';'Database/Run6         ';'Database/Run-game1    ';'Database/Run-game2    ';'Database/Run-game4    ';'Database/Run-game5    ';'Database/Run-game7    ';'Database/Run-game9    ';'Database/Run-game10   ';'Database/V1S4         ';'Database/V1S4-1       ';'Database/V1S4-2       ';'Database/V1S7         ';'Database/V1S7-1       ';'Database/V1S7-2       ';'Database/V1S8         ';'Database/V1S8-1       ';'Database/V1S8-2       ';'Database/V1S10        ';'Database/V1S10-1      ';'Database/V1S10-2      ';'Database/V1S15-1      ';'Database/V1S15-2      ';'Database/V1S16-1      ';'Database/V1S16-2      ';'Database/V1S18-1      ';'Database/V1S18-2      ';'Database/V2S6-1       ';'Database/V2S13-1      ';'Database/V2S23-1      ';'Database/V4S3-1       ';'Database/V4S5-1       ';'Database/V4S5-2       ';'Database/V4S9-1       ';'Database/V4S10-1      ';'Database/V4S10-2      '];
 
-Output_Path = [Query_Paths,'Output/'];
+Output_Path = [Query_Paths,'Output1/'];
 
 
 addpath('KianaWarping4');
@@ -293,7 +293,8 @@ tic
     
 %toc
 %tic 
-    parfor Query_no = 1:Number_of_Frames
+    %parfor Query_no = 1:Number_of_Frames
+    for Query_no = 1:Number_of_Frames
       
           Query_rgb_original = Query_rgb_original_all(:,:,:,Query_no);
          
@@ -391,8 +392,8 @@ run_time = toc;
            Stereo = stereo_all(:,:,:,Query_no);
            Depth = depth_all_smoothed(:,:,Query_no);
            if sum(Stereo(:)) % Remove the last temp_wind black frames
-            imwrite(uint8(Stereo), [Output_Path,num2str(frames_processed+Query_no,'%08d'),'.png'],'png');
-            imwrite(uint8(Depth), [Output_Path,'Depth/',num2str(frames_processed+Query_no,'%08d'),'.png'],'png');
+            imwrite(uint8(Stereo), [Output_Path,num2str(frames_processed+Query_no,'%08d'),'_.png'],'png');
+            imwrite(uint8(Depth), [Output_Path,'Depth/',num2str(frames_processed+Query_no,'%08d'),'_.png'],'png');
            end
     end
     
