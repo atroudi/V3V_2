@@ -1,0 +1,137 @@
+AbstractDatabase:
+    Abstract class implemented by many database categories (sports)
+
+    Variables:
+        - RawImagesList (2DImage, DepthMap)
+        - MaxImages: total number of raw images
+        - Matrices: For each (resolution, resize factor) pair there are precomputed 
+            - Fm (FrameMatch)
+            - Bm (BlockMatch)
+            - Gx, Gy (DepthGradients)
+
+    Functions:
+        - AddImage(2DImage, DepthMap)
+        - GetImages()
+        For the next function check whether they were computed before or not
+        - GetFm(resolution, resize factor)
+        - GetBm(resolution, resize factor)
+        - GetGxGy(resolution, resize factor)
+
+ConversionTask (Controller):
+    Input:
+        - 2D segment 
+        - Any other parameters for the conversion task
+
+    Behavior:
+        - // It can get the needed Gx, Gy, Fm, Bm according to the input resolution and the resize factor
+        - Divides the video to chunks
+        - Call SceneClassification on each chunk (List of Image Class) 
+            // Processing frames in parallel with different methods
+        - According to the classification call the appropriate method to create the 3D segments
+
+    Output:
+        The Converted 3D segment
+
+Image Class:
+    Contains all info for 2D to 3D conversion about each frame 
+
+    Instance Variables:
+        - stereo: uint[][][] 
+        - depth: uint[][] 
+        - info: boolean[][] 
+        - scene_class: uint
+        - Gx: int[][] 
+        - Gy: int[][] 
+
+SceneClassification:
+    SceneClassification(left_views: vector<Image>, dir_patch_model: string, resize_factor: float)
+    returns [scene_class: vector<uint>,info: vector<boolean[][]>]
+
+    Input: 
+        - List of Image Class
+
+    Behavior:
+        - Classify the scene (Long shot, medium shot, close up)
+        - Calculate the parameters needed for the function that estimate the depth for this classification
+
+    Output:
+        - Classified Scene
+        - Information Parameters
+
+StereoCreator:
+    create_stereo(left_view: Image, max_disp: int) -> stereo.left_view:
+
+    Input:
+        - List of raw images (chunk of the input 2D video)
+        - max_disp
+
+    Behavior:
+        - Computes right_view from left_view by simple shifting.
+
+    Output:
+        - Returns side-by-side image (left_view,right_view) or NULL in case of error.
+
+ConversionParameters Class:
+    Contains all parameters for 2d-3d conversion
+
+    Instance Variables:
+        - k: uint
+        - resize_factor: float 
+        - H_query: uint 
+        - W_query: uint 
+        - alpha: uint 
+        - Fm_Size: uint 
+        - SIFT_size: uint 
+        - block_size: uint 
+        - color_weight: uint 
+        - max_disp: uint
+
+DGC:
+    - Depth Gradient Estimator:
+        Estimates image’s depth gradients (Gx, Gy) by copying gradient from the best matching block in the database
+        Returns image’s depth gradients (Gx,Gy) or NULL in case of error
+
+        Depth_Gradient_Estimator(left_view: Image, Dataset_Fm: uint[][], Dataset_Bm: uint[][][],
+                                 Dataset_Gx: int[][][], Dataset_Gy: int[][][], parameters: ConversionParameters) 
+        returns [left_view.Gx, left_view.Gy]
+
+    - Depth Reconstructor:
+        Estimates image’s depth map from depth gradients (Gx, Gy) using Poisson reconstruction
+        Returns image’s depthmap or NULL in case of error
+
+        Depth_Reconstructor(left_view.Gx, left_view.Gy, left_view.info) 
+        returns left_view.depth
+
+        // Computing divergence
+        // Solving for x and normalizing it
+
+    - Stereo Creator from V+D
+        Generates stereo using the original frame and the estimated depth image    
+        
+        Stereo_Creator_from_V+D(left_view: Image, left_view.depth, parameters: ConversionParameters) 
+        returns left_view.stereo
+
+        // G​lobal parameters initialization (​Can be estimated once for all frames)
+        // Frame­ specific parameters initialization
+            (​estimated for each frame, takes as input ALL the global parameters + flows)
+        // Depth Refinement
+        // View Interpolation
+
+Motion Estimation:
+    Computes motion vector for each pel
+    Returns NULL in case of error
+
+    compute_flow(current_frame: Image, next_frame: Image, B: int, W: int)
+    returns Image
+
+    // G​lobal parameters initialization (​Can be estimated once for all frames)
+    // Frame­ specific parameters initialization
+        (​estimated for each frame, takes as input ALL the global parameters + flows)
+    // Depth Refinement
+    // View Interpolation
+
+
+
+
+
+

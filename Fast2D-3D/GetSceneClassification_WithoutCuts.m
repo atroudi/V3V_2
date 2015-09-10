@@ -32,13 +32,14 @@ samples_num = 1;
 v = size(Query_rgb_original, 1);
 h = size(Query_rgb_original, 2);
 false_mask = false(v, h);
-if exist([root '/Pitch Masks/'], 'dir') == 7
-    rmdir([root '/Pitch Masks/'], 's');
+if exist([root '/PitchMasks/'], 'dir') == 7
+    rmdir([root '/PitchMasks/'], 's');
 end
-mkdir(root, 'Pitch Masks');
-for fr = 1:100:no_frames
-    imwrite(Query_rgb_original(:, :, :, fr), [root '/Pitch Masks/' num2str(samples_num) '.png'], 'png');
-    imwrite(false_mask, [root '/Pitch Masks/' num2str(samples_num) 'm.png'], 'png');
+mkdir(root, 'PitchMasks');
+step = 100;
+for fr = 1:step:no_frames
+    imwrite(Query_rgb_original(:, :, :, fr), [root '/PitchMasks/' num2str(samples_num) '.png'], 'png');
+    imwrite(false_mask, [root '/PitchMasks/' num2str(samples_num) 'm.png'], 'png');
     samples_num = samples_num + 1;
 end
 
@@ -52,7 +53,7 @@ while 1
         for fr = 1:samples_num
             % sum of all values of array = 0, then no change
             % otherwise there is a change add to changed_masks array
-            % set changed boolean to true 
+            % set changed boolean to true
         end
         % if there has been any change then break
         if changed == 1
@@ -80,6 +81,7 @@ num_pels = vres*hres;
 
 masks= false(vres, hres, no_frames);
 
+% parfor fr =1:no_frames
 for fr =1:no_frames
   
     imfill_sum = 0;

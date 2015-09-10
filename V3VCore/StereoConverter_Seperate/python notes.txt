@@ -1,0 +1,69 @@
+1) Using spdiags
+   There is a restriction that the number of columns must equal to the number of diagonals to be extracted
+   And the resulting array size must be rowsN * rowsN
+   The result is sparse array, it is preferred to specify its type (csc, csr)
+   To be able to do sparse matrix operations on the resulting array
+
+2) To do operations including a sparse matrix don;t use the normal numpy operations
+   There are specific functions to handle these operations 
+   So first import from scipy.sparse.csr import csr_matrix
+   So, don't use np.transpose instead use sparseMat.transpose()
+
+3) Take care between the difference between the * operator and the np.multiply() and matrix multiplication
+   Try the '*' and the np.multiply and see which one gives you the needed results
+
+4) Matlab is 1 based while Python is 0 based
+   Matlab sometimes use column major operation while python uses row major so be careful
+   range (a, b) in matlab b is in the range while in python b is not in the range
+
+5) flatten array (row major, column major) 
+   In matlab it is column major X(:)
+   While in python it is row major so you have to transpose the array before flattenning to get same results
+   np.transpose(X).flatten()
+
+6) convert list to np.array is very important 
+   to be able to use functions like transpose, max(arr), arr[condition] = newArr, 
+   arr > val to get indices of elements bigger than val
+
+7) imresize in Matlab has antialiasing enabled by default and uses inter cubic interpolation
+   cvs.resize in python doesn't have this anti aliasing feature and uses bilinear interpolation by default
+   cv2.resize can be adjusted to use inter cubic interpolation but still in the inner implementation
+   there are differences in the cube area that is used so they still give different images
+   However, This small difference isn't a big deal
+   Also note that if we want to specify the new size in cv2.resize in python 
+   we first set the new 1 axis (hres) then the new 0 axis (vres)
+   While imresize in matlab takes the parameters inversly first 1 axis (vres) then 2 axis (hres)
+
+8) cv2.GaussianBlur(...) in python is nearly equivalent to imfilter(gr, fspecial('gaussian', ...) in matlab
+   cv2.filter2D is nearly equivalent to matlab's normal (no fspecial) imfilter
+   However, the parameters set in imfilter as replicate (use in the given code) isn't found in python 
+   but there is no such great difference 
+
+9) imwrite to write image to file in matlab the image must have values normalized between 0 and 1
+   While in python they must be between 0 and 255
+
+10) size(image) in matlab -> image.shape in python
+    However, we can't recieve more parameters from python's shape method
+    But in matlab if the photos is 3D we can recieve parameters beigger than 3 and they are all set to 1
+
+11) In python there is a significant difference between 1D arrays of size N (size is returned as (N, ))
+    and 2D arrays of size (N, 1)
+    For example 1D arrays can't be transposed and they will give the same array 
+    So if you have 1D array of size (N, ) and you want to transpose it 
+    you must make it 2D array of size (N, 1) before transpose
+    example: np.transpose([arr]) / [arr] increases the dimension by 1 and set this new dimension to 1
+
+12) initializing arrays in python: arr = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    in Matlab                    : arr = [[1, 2, 3]; [4, 5, 6]; [7, 8, 9]] (the most important is using ";")
+    Indexing arrays in python by using arr[0][0] while in matlab arr(1, 1)
+
+13) I haven't found a function similar to ichol working on sparse matrices
+    I found a function called numpy.linalg.cholesky that is similar to ichol but needs a normal dense array
+    And when i convert the sparse array to dense one the memory overflows and the program ends with error
+
+14) pcg in matlab has equivalent in python called "cg", which gives similar results
+
+15) In matlab we can use max(YY, 1) gets max bet YY and 1 so any element less than 1 is set to 1
+    In python you can np.maximum(YY, 1) // not np.max
+
+16) The similar function for interp2 that i used is RectBivariateSpline which makes interpolation similar to interp2

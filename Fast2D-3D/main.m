@@ -408,4 +408,6 @@ run_time = toc;
    end
     
 end
+
+%delete(poolobj)
     
