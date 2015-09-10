@@ -33,6 +33,8 @@ def DGC_StereoConvertor(imageInfoObjects, conversionParam):
         curImageInfo = imageInfoObjects[FR] 
         #RAW2 = cv2.resize(RAW, (0, 0), fx=R, fy=R, interpolation=cv2.INTER_LINEAR)        
         ViewInterpolation(curImageInfo, conversionParam, globalParam) 
+        
+        # Path to save the result 
         imwrite(('/Users/OmarEltobgy/Documents/V3V/V3VCore/TestData/Result/' + str(FR+1) + '.png'), curImageInfo.sideBySide*255)
 
 

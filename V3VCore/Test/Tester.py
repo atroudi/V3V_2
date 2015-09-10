@@ -25,6 +25,7 @@ from numpy import float32
 
 
 ### Testing DGC_StereoCreator
+# Pathes to the input files 
 RGB_Path = '/Users/OmarEltobgy/Documents/V3V/V3VCore/TestData/RGB/'
 Depth_Path = '/Users/OmarEltobgy/Documents/V3V/V3VCore/TestData/Depth/'
 imageInfoObjects = []
@@ -50,4 +51,5 @@ for i in xrange(1, 32):
     
     imageInfoObjects.append(newImageInfo)
 
+# you should change the path to save the result
 DGC_StereoConvertor(imageInfoObjects, conversionParam)
