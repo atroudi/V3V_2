@@ -25,8 +25,9 @@ $(document).ready( function() {
 <body>
 
 <div class="page-header">
-<div style="float: left"><img src="QCRI.jpg" alt="Qatar Computing Research Institute" style="width:200px;"></div>
-<div style="float: right"><img src="CSAIL.jpg" alt="MIT Computer Science and Artificial Intelligence Laboratory" style="width:200px;"></div>
+{% load staticfiles %}
+<div style="float: left"><img src="{% static "coreserver/QCRI.jpg" %}" alt="Qatar Computing Research Institute" style="width:200px;"></div>
+<div style="float: right"><img src="{% static "coreserver/CSAIL.jpg" %}" alt="MIT Computer Science and Artificial Intelligence Laboratory" style="width:200px;"></div>
 </br></br></br>
 <center>
   <h2> &nbsp;&nbsp; Online Demo for <a href="http://ds.qcri.org/index.php/cloud-based-multimedia-content-distribution-and-protection-platform/21-sub-project/55-dgc">2D-3D Conversion</a></h2>
