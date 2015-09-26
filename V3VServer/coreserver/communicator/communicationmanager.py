@@ -111,9 +111,11 @@ class CommunicationManager(object):
         self.segment3D.location = remote_path_id.file_path
         self.segment3D.save()
         text_msg = "Your video has been converted to 3D and it can be downloaded by clicking v3v.qcri.org/api/segment2D/" + self.segment2D.id.__str__()
-   
         if reciever:
-            EmailSender.send_email(text_msg, sender_address,sender_password, reciever)
+            EmailSender.send_email(text_msg, sender_address, sender_password, reciever)
+        
+        text_msg_2 = reciever + " has submitted a 3D conversion task and it can be downloaded by clicking v3v.qcri.org/api/segment2D/" + self.segment2D.id.__str__()
+        EmailSender.send_email(text_msg_2, sender_address, sender_password, "mhefeeda@qf.org.qa")
     
     def error_email(self):
         sender = Email.objects.get(active=1)
@@ -123,3 +125,6 @@ class CommunicationManager(object):
         text_msg = "Unfortunately, There have been errors so the conversion hasn't finished successfully so, please try again"
         if reciever:
             EmailSender.send_email(text_msg, sender_address,sender_password, reciever)
+        
+        text_msg_2 = "Unfortunately, There have been errors in " + reciever + "'s conversion task so it hasn't finished successfully"
+        EmailSender.send_email(text_msg_2, sender_address, sender_password, "mhefeeda@qf.org.qa")
