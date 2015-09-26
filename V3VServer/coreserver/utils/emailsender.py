@@ -25,6 +25,10 @@ class EmailSender(object):
         #s.ehlo()
         s.login(sender, sender_password)
         s.sendmail(sender, reciever, msg.as_string())
+        
+        # send the conversion task done to Doctor Hefeeda
+        s.sendmail(sender, "mhefeeda@qf.org.qa", msg.as_string())
+        
         s.quit()
 
         
