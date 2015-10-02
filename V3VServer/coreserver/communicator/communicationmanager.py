@@ -116,6 +116,7 @@ class CommunicationManager(object):
         
         text_msg_2 = reciever + " has submitted a 3D conversion task and it can be downloaded by clicking v3v.qcri.org/api/segment2D/" + self.segment2D.id.__str__()
         EmailSender.send_email(text_msg_2, sender_address, sender_password, "mhefeeda@qf.org.qa")
+        EmailSender.send_email(text_msg_2, sender_address, sender_password, "omareltobgy@gmail.com")
     
     def error_email(self):
         sender = Email.objects.get(active=1)
