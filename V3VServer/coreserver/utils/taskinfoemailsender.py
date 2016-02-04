@@ -10,8 +10,7 @@ from matplotlib.testing.jpl_units.Duration import Duration
 
 class EmailsTemplates(object):
     
-    task_info_email_template = 
-"""
+    task_info_email_template = """
 Dear %(receiver)s,
     We received your video to be converted to 3D video. You will receive an e-mail with the download link as soon as the video converted.
         
