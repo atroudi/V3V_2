@@ -114,7 +114,7 @@ class CommunicationManager(object):
         text_msg = "Your video has been converted to 3D and it can be downloaded by clicking v3v.qcri.org/api/segment2D/" + self.segment2D.id.__str__()
         if reciever:
             EmailSender.send_email(text_msg, sender_address, sender_password, reciever)
-        EmailsTemplates.send_email_to_debug(text_msg, sender_address, sender_password, reciever)
+        EmailsTemplates.send_email_to_team(text_msg, sender_address, sender_password, reciever)
             
     
     def error_email(self):
@@ -125,4 +125,4 @@ class CommunicationManager(object):
         text_msg = "Unfortunately, There have been errors so the conversion hasn't finished successfully so, please try again"
         if reciever:
             EmailSender.send_email(text_msg, sender_address,sender_password, reciever)
-            EmailsTemplates.send_email_to_debug(text_msg, sender_address, sender_password, reciever)
+            EmailsTemplates.send_email_to_team(text_msg, sender_address, sender_password, reciever)
