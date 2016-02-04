@@ -16,7 +16,7 @@ import pysftp
 from multiprocessing.context import Process
 from celery.app import shared_task
 from coreserver.tasks import print_hi, comm_manager_work
-
+from coreserver.utils.taskinfoemailsender import EmailsTemplates
 
 class ServiceController(object):
     '''
@@ -46,10 +46,13 @@ class ServiceController(object):
         print("Resources provisioned")
         print("########  Instance involved  #####")
         print("ipaddress=" +  provisioned_instance.ipaddress) 
-            
+        
         # calling celery task
         comm_manager_work.delay(provisioned_instance.id, segment2D.id, segment3D.id)
         #comm_manager_work.delay(provisioned_instance, segment2D, segment3D)
+        print("task with id[%d] pushed to celery queue" %segment2D.id)
+        #send email with task info to customer
+        EmailsTemplates.send_task_info_email(segment2D)
             
         print ("------------- uploaded and sent to communication manager")
         
