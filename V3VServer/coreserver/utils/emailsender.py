@@ -12,9 +12,9 @@ class EmailSender(object):
     '''
 
     @classmethod
-    def send_email(cls, text_msg, sender, sender_password, reciever):
+    def send_email(cls, text_msg, sender, sender_password, reciever, subject='V3V: Job Status'):
         msg = MIMEText(text_msg)
-        msg['Subject'] = 'V3V: Job Status'
+        msg['Subject'] = subject
         msg['From'] = sender
         msg['To'] = reciever
         
