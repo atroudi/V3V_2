@@ -27,7 +27,6 @@ class SimpleVideoProcessor(object):
         duration = cls.get_video_duration(video_path)
         if duration:
             segment2D.duration = duration
-        segment2D.Save()
         return segment2D
     
     @classmethod
