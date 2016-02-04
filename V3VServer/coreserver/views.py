@@ -21,6 +21,8 @@ from django.http.request import QueryDict
 from rest_framework.decorators import renderer_classes
 from rest_framework.renderers import TemplateHTMLRenderer
 
+import traceback
+
 class Segment2DViewSet(viewsets.ModelViewSet):
     """
     Segment2D resource.
@@ -229,6 +231,7 @@ def upload_and_convert_segment(request):
                 return HttpResponse(template.render(context));
                     
             except:
+                traceback.print_exc()
                 context_dict["notification"] = message_fail
                 context = RequestContext(request, context_dict )
                 return HttpResponse(template.render(context));
