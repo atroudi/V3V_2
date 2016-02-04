@@ -7,6 +7,8 @@ from enum import Enum
 from coreserver.models import Instance, CloudProvider
 from collections import defaultdict
 from coreserver.resourcemanager.awsprovisioner import AwsProvisioner
+from V3VServer.settings import default_instance_resource_ip
+
 class ResourceManager(object):
     ''' It manages system resources and provisions 
     resources that finish the task before a deadline 
@@ -36,7 +38,7 @@ class ResourceManager(object):
         '''
         
         # first check the default server is busy or not    
-        default_instance = Instance.objects.get(ipaddress="10.2.0.9")
+        default_instance = Instance.objects.get(ipaddress=default_instance_resource_ip)
         #if default_instance.status=="PROCESSING":
         #   aws_instance = AwsProvisioner.provision(deadline, **kwargs)
         #  return aws_instance
