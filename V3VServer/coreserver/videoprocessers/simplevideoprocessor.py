@@ -31,16 +31,19 @@ class SimpleVideoProcessor(object):
     
     @classmethod
     def get_video_duration(cls, video_path):
-        # run bash script
-        result = subprocess.Popen(["ffprobe", video_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        # stdout of the script
-        out = result.communicate()[0]
-        re_compiler = re.compile(r'Duration: (\d*):(\d*):(\d*)')
-        re_mathcer = re_compiler.search(str(out))
-        if re_mathcer:
-            print(re_mathcer.group())
-            duration = int(re_mathcer.group(1)) * 60 * 60 # hours
-            duration += int(re_mathcer.group(2)) * 60 # minutes 
-            duration += int(re_mathcer.group(3)) # seconds
-            return duration 
+        try:
+            # run bash script
+            result = subprocess.Popen(["ffprobe", video_path], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            # stdout of the script
+            out = result.communicate()[0]
+            re_compiler = re.compile(r'Duration: (\d*):(\d*):(\d*)')
+            re_mathcer = re_compiler.search(str(out))
+            if re_mathcer:
+                print(re_mathcer.group())
+                duration = int(re_mathcer.group(1)) * 60 * 60 # hours
+                duration += int(re_mathcer.group(2)) * 60 # minutes 
+                duration += int(re_mathcer.group(3)) # seconds
+                return duration
+        except:
+            pass
         
