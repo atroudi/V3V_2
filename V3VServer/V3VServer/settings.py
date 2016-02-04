@@ -143,3 +143,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+# demo configurations
+v3vteam_emails = [("hazem.s.ashmawy@gmail.com", True), ("mhefeeda@qf.org.qa", False), ("atroudi@qf.org.qa", False)]
+default_instance_resource_ip = "10.2.0.9"
