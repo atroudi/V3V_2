@@ -56,6 +56,6 @@ this message is sent to V3V team email list concerning task assigned by %(receiv
         if receiver:
             for t in v3vteam_emails:
                 if t[1]: # True set to receive
-                    EmailSender.send_email(text_msg, sender_address,sender_password, t[1], subject)
+                    EmailSender.send_email(text_msg, sender_address,sender_password, t[0], subject)
 
     
