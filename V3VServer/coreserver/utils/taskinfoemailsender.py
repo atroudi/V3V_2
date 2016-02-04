@@ -28,6 +28,7 @@ V3V team
     @classmethod
     def send_task_info_email(cls, segment2D):
         sender = Email.objects.get(active=1)
+        subject = "V3V: video uploaded"
         sender_address = sender.address
         sender_password = sender.password
         receiver = segment2D.email;
@@ -36,6 +37,6 @@ V3V team
                 }
         text_msg = cls.task_info_email_template % data
         if receiver:
-            EmailSender.send_email(text_msg, sender_address,sender_password, receiver)
+            EmailSender.send_email(text_msg, sender_address,sender_password, receiver, subject)
 
     
