@@ -53,7 +53,7 @@ class Segment2D(models.Model):
     location=models.CharField(max_length=255)
     resolution=models.CharField(max_length=255)
     url=models.CharField(max_length=255)
-    upload_date=models.DateTimeField(null=True)
+    upload_date=models.DateTimeField(null=True, auto_now_add=True)
     email=models.CharField(max_length=255)
     source_ip=models.CharField(max_length=255)
     
