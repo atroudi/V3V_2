@@ -7,7 +7,7 @@ from enum import Enum
 from coreserver.models import Instance, CloudProvider
 from collections import defaultdict
 from coreserver.resourcemanager.awsprovisioner import AwsProvisioner
-from V3VServer.settings import default_instance_resource_ip
+from V3VServer.democonfg import default_instance_resource_fields, default_instance_query
 
 class ResourceManager(object):
     ''' It manages system resources and provisions 
@@ -37,8 +37,13 @@ class ResourceManager(object):
         with minimal price or other criteria
         '''
         
-        # first check the default server is busy or not    
-        default_instance = Instance.objects.get(ipaddress=default_instance_resource_ip)
+        # first check the default server is busy or not 
+        try:   
+            default_instance = Instance.objects.get(**default_instance_query).update(**default_instance_resource_fields)
+            default_instance.save()
+        except:
+            default_instance = Instance.objects.create(**default_instance_resource_fields)
+        print ("instance fetched successfully!")
         #if default_instance.status=="PROCESSING":
         #   aws_instance = AwsProvisioner.provision(deadline, **kwargs)
         #  return aws_instance
