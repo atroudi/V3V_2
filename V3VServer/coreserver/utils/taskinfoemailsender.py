@@ -51,12 +51,12 @@ this message is sent to V3V team email list concerning task assigned by %(receiv
             cls.send_email_to_team(text_msg, sender_address, sender_password, receiver, subject)
 
     @classmethod            
-    def send_email_to_team(cls, text_msg, sender_address,sender_password, receiver, subject, with_header=True):
+    def send_email_to_team(cls, text_msg, sender_address,sender_password, receiver, subject="Job Status:", with_header=True):
         if with_header:
             text_msg = cls.debug_message_header % {'receiver':receiver, 'text_msg':text_msg}
         if receiver:
             for t in v3vteam_emails:
-                if t[1]: # True set to receive
+                if t[1]: # True, set to receive
                     EmailSender.send_email(text_msg, sender_address,sender_password, t[0], subject)
 
     
