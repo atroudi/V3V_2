@@ -40,9 +40,9 @@ class ResourceManager(object):
         # first check the default server is busy or not 
         try:   
             default_instance = Instance.objects.get(**default_instance_query).update(**default_instance_resource_fields)
-            default_instance.save()
         except:
-            default_instance = Instance.objects.create(**default_instance_resource_fields)
+            print ("Errrrrrrrrrrrrrrrrrrrrrrrrrrrroooooooooooooooooooooooooooooooooooorrrrrrrrrrrrrrrrr")
+            # default_instance = Instance.objects.create(**default_instance_resource_fields)
         print ("instance fetched successfully!")
         #if default_instance.status=="PROCESSING":
         #   aws_instance = AwsProvisioner.provision(deadline, **kwargs)
