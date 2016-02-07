@@ -101,6 +101,7 @@ class Segment2DViewSet(viewsets.ModelViewSet):
                 instance = segment3D.instance
                 file_path = segment3D.location
                 ssh=pysftp.Connection(host=instance.ipaddress,username=instance.username,password=instance.password)
+                print ("opening path:"+file_path)
                 file=ssh.open(file_path);
                 response = HttpResponse(FileWrapper(file), content_type=mimetypes.guess_type(file_path)[0])
                 response['Content-Disposition'] = "attachment; filename=%s" % os.path.basename(file_path)
