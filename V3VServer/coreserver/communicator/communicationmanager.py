@@ -72,8 +72,11 @@ class CommunicationManager(object):
             self.date_directory = time.strftime("/%d_%m_%Y/")
             output_path = self.instance.output_path + self.date_directory + self.segment2D.id.__str__() + ".mp4"
             print(">>> output path: " + output_path)
-            # mkdir to insure the directory exist
-            ssh.mkdir(self.instance.output_path + self.date_directory)
+            # try to mkdir to insure the directory exist
+            try:
+                ssh.mkdir(self.instance.output_path + self.date_directory)
+            except:
+                pass
             
             self.instance.status = 'PROCESSING'
             self.instance.save()
@@ -85,6 +88,10 @@ class CommunicationManager(object):
             
             self.finalize()
         except:
+            # deprovision_resources so that it can be used later
+            # this is error prone e.g if the resource not finished its process yet
+            ResourceManager.deprovision_resources(self.instance)
+            print("resources deprovisioned after error has happened")
             # send error email
             self.error_email()
             #if instance.ipaddress == "127.0.0.1": # localhost
