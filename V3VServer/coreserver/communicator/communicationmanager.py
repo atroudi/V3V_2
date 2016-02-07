@@ -43,6 +43,7 @@ class CommunicationManager(object):
         self.instance  = Instance.objects.get(id=inst)
         self.segment2D = Segment2D.objects.get(id=seg2D)
         self.segment3D = Segment3D.objects.get(id=seg3D)
+        self.date_directory = "/"
     
     def send_start_signal(self):
         while 1:
@@ -67,7 +68,8 @@ class CommunicationManager(object):
         try:
             ssh=pysftp.Connection(host=self.instance.ipaddress,username=self.instance.username,password=self.instance.password)
             input_path = self.instance.input_path + "/" +  os.path.basename(self.segment2D.location.__str__())
-            output_path = self.instance.output_path + time.strftime("/%d_%m_%Y/") + self.segment2D.id.__str__() + ".mp4"
+            self.date_directory = time.strftime("/%d_%m_%Y/")
+            output_path = self.instance.output_path + self.date_directory + self.segment2D.id.__str__() + ".mp4"
             print("output path: ", output_path)
             self.instance.status = 'PROCESSING'
             self.instance.save()
@@ -87,7 +89,7 @@ class CommunicationManager(object):
         return Status.SUCCESS
     
     def get_converted_segment_path(self):
-        output_path = self.instance.output_path + "/" + self.segment2D.id.__str__() + ".mp4"
+        output_path = self.instance.output_path + self.date_directory + self.segment2D.id.__str__() + ".mp4"
         remote_path_id=RemotePathIdentifier(self.instance, output_path)
         return remote_path_id
     
