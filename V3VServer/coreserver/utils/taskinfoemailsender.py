@@ -7,18 +7,19 @@ Created on Feb 4, 2016
 from coreserver.utils.emailsender import EmailSender
 from coreserver.models import Email, Segment2D
 from matplotlib.testing.jpl_units.Duration import Duration
-from V3VServer.settings import v3vteam_emails
+from V3VServer.democonfg import v3vteam_emails
 
 class EmailsTemplates(object):
     
     task_info_email_template = """
 Dear %(receiver)s,
-    We received your video to be converted to 3D video. You will receive an e-mail with the download link as soon as the video converted.
+
+We received your video. You will receive an e-mail with the download link as soon as the video converted to 3D.
         
-    video info:
-        date received: %(date)s
-        duration: %(duration)s seconds
-        conversion task id: %(id)s
+video info:
+    - date received: %(date)s
+    - duration: %(duration)s seconds
+    - conversion task id: %(id)s
         
 thanks for using our service,
         
