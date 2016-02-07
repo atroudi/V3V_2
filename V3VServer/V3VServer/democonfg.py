@@ -23,7 +23,7 @@ v3vteam_emails = [
 default_instance_query = dict(id=3)
 # instance model fields used to update every time query made 
 default_instance_resource_fields = dict(
-    ip = '10.2.0.9', 
+    ipaddress = '10.2.0.9', 
     username = 'qcri\\kcalagari', 
     password = 'Qatar123',  
     port = 22,  
