@@ -38,7 +38,8 @@ class ResourceManager(object):
         '''
         
         # first check the default server is busy or not    
-        default_instance = Instance.objects.get(**default_instance_query).update(**default_instance_resource_fields)
+        default_instance = Instance.objects.get(**default_instance_query)
+        default_instance.__dict__.update(**default_instance_resource_fields)
         # default_instance = Instance.objects.create(**default_instance_resource_fields)
         print ("instance fetched successfully!")
         #if default_instance.status=="PROCESSING":
