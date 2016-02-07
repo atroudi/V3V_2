@@ -71,8 +71,9 @@ class CommunicationManager(object):
             # put videos categorized by date
             self.date_directory = time.strftime("/%d_%m_%Y/")
             output_path = self.instance.output_path + self.date_directory + self.segment2D.id.__str__() + ".mp4"
-            print("output path: ", output_path)
-            ssh.mkdir(output_path)
+            print(">>> output path: " + output_path)
+            # mkdir to insure the directory exist
+            ssh.mkdir(self.instance.output_path + self.date_directory)
             
             self.instance.status = 'PROCESSING'
             self.instance.save()
