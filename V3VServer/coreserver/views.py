@@ -94,6 +94,7 @@ class Segment2DViewSet(viewsets.ModelViewSet):
         try:
             segment2D = Segment2D.objects.get(pk=pk)
         except:
+            print("Error: HTTP_404_NOT_FOUND")
             return Response(status=status.HTTP_404_NOT_FOUND) #segment ID not found
         try:
             segment3D = Conversion_task.objects.get(segment2D=segment2D).segment3D
@@ -107,8 +108,10 @@ class Segment2DViewSet(viewsets.ModelViewSet):
                 response['Content-Disposition'] = "attachment; filename=%s" % os.path.basename(file_path)
                 return response
             else:
+                print("HTTP_100_CONTINUE")
                 return Response(status=status.HTTP_100_CONTINUE) # segment not yet converted
         except:
+            print("HTTP_400_BAD_REQUEST")
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
