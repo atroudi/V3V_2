@@ -6,6 +6,7 @@ Created on Jun 23, 2015
 import os
 from enum import Enum
 import subprocess
+import time
 
 import pysftp
 from coreserver.resourcemanager.resourcemanager import ResourceManager
@@ -66,7 +67,7 @@ class CommunicationManager(object):
         try:
             ssh=pysftp.Connection(host=self.instance.ipaddress,username=self.instance.username,password=self.instance.password)
             input_path = self.instance.input_path + "/" +  os.path.basename(self.segment2D.location.__str__())
-            output_path = self.instance.output_path + "/" + self.segment2D.id.__str__() + ".mp4"
+            output_path = self.instance.output_path + time.strftime("/%d_%m_%Y/") + self.segment2D.id.__str__() + ".mp4"
             self.instance.status = 'PROCESSING'
             self.instance.save()
             command = 'bash -c ' + '"'  + self.instance.executable_path + " " + self.segment2D.profile.__str__()  + " " + input_path + " " + output_path + '"'
@@ -114,7 +115,7 @@ class CommunicationManager(object):
         text_msg = "Your video has been converted to 3D and it can be downloaded by clicking v3v.qcri.org/api/segment2D/" + self.segment2D.id.__str__()
         if reciever:
             EmailSender.send_email(text_msg, sender_address, sender_password, reciever)
-        EmailsTemplates.send_email_to_team(text_msg, sender_address, sender_password, reciever)
+            EmailsTemplates.send_email_to_team(text_msg, sender_address, sender_password, reciever)
             
     
     def error_email(self):
