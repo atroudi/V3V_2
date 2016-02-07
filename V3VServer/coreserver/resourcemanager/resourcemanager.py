@@ -39,10 +39,13 @@ class ResourceManager(object):
         
         # first check the default server is busy or not
         try:
+            # query default_instance using configuration file
             default_instance = Instance.objects.get(**default_instance_query)
+            # update instance with info from configuration file
             default_instance.__dict__.update(**default_instance_resource_fields)
             print ("instance fetched and updated successfully!")
-        except:
+        except: # default instance does not exist in database
+            # create new instance with info from configuration file
             default_instance = Instance.objects.create(**default_instance_resource_fields)
             print ("instance added to database successfully")
         
