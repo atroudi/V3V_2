@@ -68,6 +68,7 @@ class CommunicationManager(object):
             ssh=pysftp.Connection(host=self.instance.ipaddress,username=self.instance.username,password=self.instance.password)
             input_path = self.instance.input_path + "/" +  os.path.basename(self.segment2D.location.__str__())
             output_path = self.instance.output_path + time.strftime("/%d_%m_%Y/") + self.segment2D.id.__str__() + ".mp4"
+            print("output path: ", output_path)
             self.instance.status = 'PROCESSING'
             self.instance.save()
             command = 'bash -c ' + '"'  + self.instance.executable_path + " " + self.segment2D.profile.__str__()  + " " + input_path + " " + output_path + '"'
