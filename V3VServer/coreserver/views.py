@@ -112,6 +112,7 @@ class Segment2DViewSet(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_100_CONTINUE) # segment not yet converted
         except:
             print("HTTP_400_BAD_REQUEST")
+            traceback.print_exc()
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
