@@ -7,11 +7,11 @@ Created on Feb 4, 2016
 from coreserver.utils.emailsender import EmailSender
 from coreserver.models import Email, Segment2D
 from matplotlib.testing.jpl_units.Duration import Duration
-from V3VServer.democonfg import v3vteam_emails
+from V3VServer.democonfg import V3V_EMAILS
 
 class EmailsTemplates(object):
     
-    task_info_email_template = """
+    TASK_INFO_EMAIL_TEMPLATE = """
 Dear %(receiver)s,
 
 We received your video. You will receive an e-mail with the download link as soon as the video converted to 3D.
@@ -25,7 +25,7 @@ thanks for using our service,
         
 V3V team
 """
-    debug_message_header = """
+    DEBUG_MESSAGE_HEADER = """
 this message is sent to V3V team email list concerning task assigned by %(receiver)s
 
 --------------------------------
@@ -45,7 +45,7 @@ this message is sent to V3V team email list concerning task assigned by %(receiv
         data = {'receiver':segment2D.email, 'date':segment2D.upload_date, 'id':segment2D.id, 
                 'duration':segment2D.duration
                 }
-        text_msg = cls.task_info_email_template % data
+        text_msg = cls.TASK_INFO_EMAIL_TEMPLATE % data
         if receiver:
             EmailSender.send_email(text_msg, sender_address,sender_password, receiver, subject)
             cls.send_email_to_team(text_msg, sender_address, sender_password, receiver, subject)
@@ -53,9 +53,9 @@ this message is sent to V3V team email list concerning task assigned by %(receiv
     @classmethod            
     def send_email_to_team(cls, text_msg, sender_address,sender_password, receiver, subject="Job Status:", with_header=True):
         if with_header:
-            text_msg = cls.debug_message_header % {'receiver':receiver, 'text_msg':text_msg}
+            text_msg = cls.DEBUG_MESSAGE_HEADER % {'receiver':receiver, 'text_msg':text_msg}
         if receiver:
-            for t in v3vteam_emails:
+            for t in V3V_EMAILS:
                 if t[1]: # True, set to receive
                     EmailSender.send_email(text_msg, sender_address,sender_password, t[0], subject)
 
