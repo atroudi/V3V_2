@@ -168,7 +168,7 @@ def upload_and_convert_segment(request):
         # preparing the options that can be sent as conversion result 
         context_dict=dict()
         context_dict.update(calculate_statistics())
-        template = loader.get_template('coreserver/v3v_demo.html')
+        template = loader.get_template('coreserver/hazem.html')
         message_fail = "*** Problem happened while converting the segment, please try again after few minutes."
         message_success = '*** Your video has been uploaded successfully and we will send the converted 3D video to your email when it is ready,\n Thanks for using our 2D-3D Conversion Service'
         context_dict["finished"] = True   
@@ -249,7 +249,7 @@ def calculate_statistics():
     context = dict()
     print("adding statistics:")
     context['has_statistics'] = True
-    context['videos'] = str(Segment3D.objects.count())
+    context['videos'] = Segment3D.objects.count()
     print("number of videos:"+context['videos'])
     context['users'] = str(10)
     print("number of videos:" + context['users'])
