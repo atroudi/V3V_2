@@ -119,9 +119,9 @@ class Segment2DViewSet(viewsets.ModelViewSet):
 ### GUI related
 @csrf_exempt
 def index(request):
-    # statiscs_context = calculate_statistics()
-    # context = RequestContext(request, statiscs_context)
-    return render_to_response('coreserver/hazem.html')
+    statiscs_context = calculate_statistics()
+    context = RequestContext(request, statiscs_context)
+    return render_to_response('coreserver/hazem.html', context)
     # return render_to_response('coreserver/v3v_demo.html', context)
 
 @csrf_exempt
