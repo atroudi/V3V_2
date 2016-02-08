@@ -35,15 +35,14 @@ $(document).ready( function() {
 </center>
 </div>
 
-<div style="background:LightYellow  !important"> 
-     <h4>videos are converted so far by different users!    more statistics...</h4>
-</div>
 {% block statistics %}
-	
-	<div style="background:LightYellow  !important"> 
-    	 <h4>{{videos}} videoss are converted so far by different users!    more statistics...</h4>
-	</div>
-	  
+	{% if has_statistics %}
+		<div style="background:LightYellow  !important">
+			<center>
+	    	 	<h4>{{videos}} videoss are converted so far by {{users}} different users!    more statistics...</h4>
+	    	</center>
+		</div>
+	{% endif %}  
 {% endblock %}
 
 <div class="container">
