@@ -35,16 +35,6 @@ $(document).ready( function() {
 </center>
 </div>
 
-{% block statistics %}
-	{% if has_statistics %}
-		<div style="background:#E0E0E0">
-			<center>
-	    	 	<h4>{{videos}} videos are converted so far by {{users}} different users! -- more statistics...</h4>
-	    	</center>
-		</div>
-	{% endif %}  
-{% endblock %}
-
 <div class="container">
   
   <div style="background:#FFFFCC  !important" class="jumbotron"> 
@@ -97,6 +87,16 @@ $(document).ready( function() {
   </div>
 	{% endif %}  
   {% endblock %}
+  
+  {% block statistics %}
+	{% if has_statistics %}
+		<div style="background:#E0E0E0">
+			<center>
+	    	 	<h4><red>{{videos}}</red> videos are converted so far by <red>{{users}}</red> different users! -- more statistics...</h4>
+	    	</center>
+		</div>
+	{% endif %}  
+{% endblock %}
  
 </div>
 </body>
