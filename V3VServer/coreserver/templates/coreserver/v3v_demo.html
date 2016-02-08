@@ -34,15 +34,7 @@ $(document).ready( function() {
   <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This demo converts uploaded 2D sports videos to 3D videos. More info about this project can be found <a href="http://ds.qcri.org/index.php/cloud-based-multimedia-content-distribution-and-protection-platform/21-sub-project/55-dgc">here</a></p>
 </center>
 </div>
-{% block message %}
 
-	<div class="page-header">
-		<center>
-			 
-		</center>
-	</div>
-
-{% endblock %}
 <div class="container">
   
   <div style="background:#FFFFCC  !important" class="jumbotron"> 
@@ -91,10 +83,19 @@ $(document).ready( function() {
 	{% if finished %}
    <div style="background:LightYellow  !important"> 
      <b> <h5>{{notification}}</h5> </b>
-     <h4>videos are converted so far by different users!    more statistics...</h4>
   </div>
 	{% endif %}  
   {% endblock %}
+  
+  {% block statistics %}
+	{% if has_statistics %}
+		<div style="background:#E0E0E0">
+			<center>
+	    	 	<h4><red>{{videos}}</red> videos are converted so far by <red>{{users}}</red> different users! -- more statistics...</h4>
+	    	</center>
+		</div>
+	{% endif %}  
+{% endblock %}
  
 </div>
 </body>
