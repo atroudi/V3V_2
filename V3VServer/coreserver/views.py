@@ -121,7 +121,7 @@ class Segment2DViewSet(viewsets.ModelViewSet):
 def index(request):
     # statiscs_context = calculate_statistics()
     # context = RequestContext(request, statiscs_context)
-    return render_to_response('coreserver/v3v_demo.html')
+    return render_to_response('coreserver/hazem.html')
     # return render_to_response('coreserver/v3v_demo.html', context)
 
 @csrf_exempt
