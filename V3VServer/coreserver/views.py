@@ -119,9 +119,10 @@ class Segment2DViewSet(viewsets.ModelViewSet):
 ### GUI related
 @csrf_exempt
 def index(request):
-    statiscs_context = calculate_statistics()
-    context = RequestContext(request, statiscs_context)
-    return render_to_response('coreserver/v3v_demo.html', context)
+    # statiscs_context = calculate_statistics()
+    # context = RequestContext(request, statiscs_context)
+    return render_to_response('coreserver/v3v_demo.html')
+    # return render_to_response('coreserver/v3v_demo.html', context)
 
 @csrf_exempt
 def upload_segment(request):
@@ -246,8 +247,11 @@ def upload_and_convert_segment(request):
 
 def calculate_statistics():
     context = dict()
+    print("adding statistics:")
     context['has_statistics'] = True
-    context['videos'] = Segment3D.objects.count()
-    context['users'] = 10
+    context['videos'] = str(Segment3D.objects.count())
+    print("number of videos:"+context['videos'])
+    context['users'] = str(10)
+    print("number of videos:" + context['users'])
     return context
     
