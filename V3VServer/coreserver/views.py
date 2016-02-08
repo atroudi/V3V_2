@@ -121,8 +121,7 @@ class Segment2DViewSet(viewsets.ModelViewSet):
 def index(request):
     statiscs_context = calculate_statistics()
     context = RequestContext(request, statiscs_context)
-    return render_to_response('coreserver/hazem.html', context)
-    # return render_to_response('coreserver/v3v_demo.html', context)
+    return render_to_response('coreserver/v3v_demo.html', context)
 
 @csrf_exempt
 def upload_segment(request):
@@ -168,7 +167,7 @@ def upload_and_convert_segment(request):
         # preparing the options that can be sent as conversion result 
         context_dict=dict()
         context_dict.update(calculate_statistics())
-        template = loader.get_template('coreserver/hazem.html')
+        template = loader.get_template('coreserver/v3v_demo.html')
         message_fail = "*** Problem happened while converting the segment, please try again after few minutes."
         message_success = '*** Your video has been uploaded successfully and we will send the converted 3D video to your email when it is ready,\n Thanks for using our 2D-3D Conversion Service'
         context_dict["finished"] = True   
