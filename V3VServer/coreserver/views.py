@@ -249,7 +249,7 @@ def calculate_statistics():
     context = dict()
     print("adding statistics:")
     context['has_statistics'] = True
-    context['videos'] = Segment3D.objects.count()
+    context['videos'] = str(Segment3D.objects.count())
     print("number of videos:"+context['videos'])
     context['users'] = str(10)
     print("number of videos:" + context['users'])
