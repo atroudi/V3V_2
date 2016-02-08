@@ -68,14 +68,14 @@ class CommunicationManager(object):
         try:
             ssh=pysftp.Connection(host=self.instance.ipaddress,username=self.instance.username,password=self.instance.password)
             input_path = self.instance.input_path + "/" +  os.path.basename(self.segment2D.location.__str__())
-            # put videos categorized by date
+            # output videos categorized by date
             self.date_directory = time.strftime("/%d_%m_%Y/")
             output_path = self.instance.output_path + self.date_directory + self.segment2D.id.__str__() + ".mp4"
             print(">>> output path: " + output_path)
-            # try to mkdir to insure the directory exist
+            # try to makedirs to insure the directory exist
             try:
-                ssh.mkdir(self.instance.output_path + self.date_directory)
-            except:
+                ssh.makedirs(self.instance.output_path + self.date_directory)
+            except: # directory
                 pass
             
             self.instance.status = 'PROCESSING'
