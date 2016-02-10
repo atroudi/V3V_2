@@ -260,7 +260,7 @@ def calculate_statistics():
 def get_videos_per_day(request):
     data = Segment3D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('id'))
     data_list = list(data)
-    remove_none_element(data_list)
+    remove_none_element(data_list, 'day')
     return JsonResponse(data_list, safe=False)
 
 @csrf_exempt
@@ -268,7 +268,7 @@ def get_users_per_day(request):
     print("get_users_per_day")
     data = Segment2D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('email', distinct=True))
     data_list = list(data)
-    remove_none_element(data_list)
+    remove_none_element(data_list, 'day')
     print ("here")
     print (data_list)
     return JsonResponse(data_list, safe=False)
