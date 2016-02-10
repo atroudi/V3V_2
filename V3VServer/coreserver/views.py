@@ -258,7 +258,7 @@ def calculate_statistics():
 # for statistics page
 @csrf_exempt
 def get_videos_per_day(request):
-    data = Segment2D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('id'))
+    data = Segment3D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('id'))
     return JsonResponse(list(data), safe=False)
 
 @csrf_exempt
