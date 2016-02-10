@@ -265,11 +265,8 @@ def get_videos_per_day(request):
 def get_users_per_day(request):
     print("get_users_per_day")
     data = Segment2D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('email'))
-    print(data)
+    for x in data:
+        print(x)
     print(len(list(data)))
     tmp = JsonResponse(list(data), safe=False)
-    try:
-        print(tmp)
-    except:
-        print("Error")
     return JsonResponse(list(data), safe=False)
