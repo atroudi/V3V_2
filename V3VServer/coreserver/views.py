@@ -259,19 +259,22 @@ def calculate_statistics():
 @csrf_exempt
 def get_videos_per_day(request):
     data = Segment3D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('id'))
-    return JsonResponse(list(data), safe=False)
+    data_list = list(data)
+    remove_none_element(data_list)
+    return JsonResponse(data_list, safe=False)
 
 @csrf_exempt
 def get_users_per_day(request):
-    print("get_users_per_day")
-    data = Segment2D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('email'))
+    data = Segment2D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('email', distinct=True))
     data_list = list(data)
+    remove_none_element(data_list)
+    return JsonResponse(data_list, safe=False)
+
+def remove_none_element(data_list, key):
     for i, d in enumerate(data_list):
-        if d['day']==None:
+        if d[key]==None:
             try:
                 data_list.pop(i)
-                print ("removed")
             except:
                 traceback.print_exc()
             break
-    return JsonResponse(data_list, safe=False)
