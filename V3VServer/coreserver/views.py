@@ -265,6 +265,7 @@ def get_videos_per_day(request):
 
 @csrf_exempt
 def get_users_per_day(request):
+    print("get_users_per_day")
     data = Segment2D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('email', distinct=True))
     data_list = list(data)
     remove_none_element(data_list)
