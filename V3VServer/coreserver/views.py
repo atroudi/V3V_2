@@ -269,7 +269,11 @@ def get_users_per_day(request):
     for i, d in enumerate(data):
         print(d)
         if d['day']==None:
-            data.pop(i)
+            try:
+                data.pop(i)
+                print ("removed")
+            except:
+                traceback.print_exc()
             break
     print(len(list(data)))
     tmp = JsonResponse(list(data), safe=False)
