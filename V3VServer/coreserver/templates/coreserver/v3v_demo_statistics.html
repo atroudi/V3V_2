@@ -16,8 +16,6 @@ function zoomChart(my_chart) {
 			my_chart.dataProvider.length - 1);
 }
 
-
-
 var usersPerDayChart = AmCharts.makeChart("usersperday", {
 	"type" : "serial",
 	"theme" : "light",
@@ -139,84 +137,86 @@ var usersPerDayChart = AmCharts.makeChart("usersperday", {
 //usersPerDayChart.addListener("rendered", zoomChart);
 //zoomChart(usersPerDayChart);
 
-var videosPerDayChart = AmCharts.makeChart("videosperday", {
-	"type" : "serial",
-	"theme" : "light",
-	"marginRight" : 40,
-	"marginLeft" : 40,
-	"autoMarginOffset" : 20,
-	"dataDateFormat" : "YYYY-MM-DD",
-	"dataLoader": {
-	    "url": "get_videos_per_day",
-	    "format": "json"
-	 },
-	"valueAxes" : [ {
-		"id" : "v1",
-		"axisAlpha" : 0,
-		"position" : "left",
-		"ignoreAxisWidth" : true
-	} ],
-	"balloon" : {
-		"borderThickness" : 1,
-		"shadowAlpha" : 0
-	},
-	"graphs" : [ {
-		"id" : "g1",
+var jsonData = {
+		"type" : "serial",
+		"theme" : "light",
+		"marginRight" : 40,
+		"marginLeft" : 40,
+		"autoMarginOffset" : 20,
+		"dataDateFormat" : "YYYY-MM-DD",
+		"dataLoader": {
+		    "url": "get_videos_per_day",
+		    "format": "json"
+		 },
+		"valueAxes" : [ {
+			"id" : "v1",
+			"axisAlpha" : 0,
+			"position" : "left",
+			"ignoreAxisWidth" : true
+		} ],
 		"balloon" : {
-			"drop" : true,
-			"adjustBorderColor" : false,
-			"color" : "#ffffff"
+			"borderThickness" : 1,
+			"shadowAlpha" : 0
 		},
-		"bullet" : "round",
-		"bulletBorderAlpha" : 1,
-		"bulletColor" : "#FFFFFF",
-		"bulletSize" : 5,
-		"hideBulletsCount" : 50,
-		"lineThickness" : 2,
-		"title" : "videos per day",
-		"useLineColorForBulletBorder" : true,
-		"valueField" : "count",
-		"balloonText" : "<span style='font-size:18px;'>[[value]]</span>"
-	} ],
-	"chartScrollbar" : {
-		"graph" : "g1",
-		"oppositeAxis" : false,
-		"offset" : 30,
-		"scrollbarHeight" : 80,
-		"backgroundAlpha" : 0,
-		"selectedBackgroundAlpha" : 0.1,
-		"selectedBackgroundColor" : "#888888",
-		"graphFillAlpha" : 0,
-		"graphLineAlpha" : 0.5,
-		"selectedGraphFillAlpha" : 0,
-		"selectedGraphLineAlpha" : 1,
-		"autoGridCount" : true,
-		"color" : "#AAAAAA"
-	},
-	"chartCursor" : {
-		"pan" : true,
-		"valueLineEnabled" : true,
-		"valueLineBalloonEnabled" : true,
-		"cursorAlpha" : 1,
-		"cursorColor" : "#258cbb",
-		"limitToGraph" : "g1",
-		"valueLineAlpha" : 0.2
-	},
-	"valueScrollbar" : {
-		"oppositeAxis" : false,
-		"offset" : 50,
-		"scrollbarHeight" : 10
-	},
-	"categoryField" : "day",
-	"categoryAxis" : {
-		"parseDates" : true,
-		"dashLength" : 1,
-		"minorGridEnabled" : true
-	},
-	"export" : {
-		"enabled" : true
-	}
-});
+		"graphs" : [ {
+			"id" : "g1",
+			"balloon" : {
+				"drop" : true,
+				"adjustBorderColor" : false,
+				"color" : "#ffffff"
+			},
+			"bullet" : "round",
+			"bulletBorderAlpha" : 1,
+			"bulletColor" : "#FFFFFF",
+			"bulletSize" : 5,
+			"hideBulletsCount" : 50,
+			"lineThickness" : 2,
+			"title" : "videos per day",
+			"useLineColorForBulletBorder" : true,
+			"valueField" : "count",
+			"balloonText" : "<span style='font-size:18px;'>[[value]]</span>"
+		} ],
+		"chartScrollbar" : {
+			"graph" : "g1",
+			"oppositeAxis" : false,
+			"offset" : 30,
+			"scrollbarHeight" : 80,
+			"backgroundAlpha" : 0,
+			"selectedBackgroundAlpha" : 0.1,
+			"selectedBackgroundColor" : "#888888",
+			"graphFillAlpha" : 0,
+			"graphLineAlpha" : 0.5,
+			"selectedGraphFillAlpha" : 0,
+			"selectedGraphLineAlpha" : 1,
+			"autoGridCount" : true,
+			"color" : "#AAAAAA"
+		},
+		"chartCursor" : {
+			"pan" : true,
+			"valueLineEnabled" : true,
+			"valueLineBalloonEnabled" : true,
+			"cursorAlpha" : 1,
+			"cursorColor" : "#258cbb",
+			"limitToGraph" : "g1",
+			"valueLineAlpha" : 0.2
+		},
+		"valueScrollbar" : {
+			"oppositeAxis" : false,
+			"offset" : 50,
+			"scrollbarHeight" : 10
+		},
+		"categoryField" : "day",
+		"categoryAxis" : {
+			"parseDates" : true,
+			"dashLength" : 1,
+			"minorGridEnabled" : true
+		},
+		"export" : {
+			"enabled" : true
+		}
+	};
+
+var videosPerDayChart = AmCharts.makeChart("videosperday", jsonData);
 
 //videosPerDayChart.addListener("rendered", zoomChart);
 //zoomChart(videosPerDayChart);
