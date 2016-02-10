@@ -10,69 +10,83 @@
   	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 	<script src="http://www.amcharts.com/lib/3/amcharts.js" type="text/javascript"></script>
 	<script src="http://www.amcharts.com/lib/3/serial.js" type="text/javascript"></script>
-	
+	<script src="amcharts/plugins/dataloader/dataloader.min.js" type="text/javascript"></script>
 	
 	<script type="text/javascript">
 	// loading charts
-	AmCharts.makeChart("chartdiv",
+	AmCharts.makeChart("videosperday",
 				{
 					"type": "serial",
-					"categoryField": "category",
+					"categoryField": "day",
 					"startDuration": 1,
 					"categoryAxis": {
 						"gridPosition": "start"
 					},
-					"trendLines": [],
+					"dataLoader": {
+					    "url": "get_videos_per_day",
+					    "format": "json"
+					 },
+					"pathToImages": "http://www.amcharts.com/lib/images/",
 					"graphs": [
 						{
 							"balloonText": "[[title]] of [[category]]:[[value]]",
 							"bullet": "round",
 							"id": "AmGraph-1",
-							"title": "graph 1",
-							"valueField": "column-1"
-						},
-						{
-							"balloonText": "[[title]] of [[category]]:[[value]]",
-							"bullet": "square",
-							"id": "AmGraph-2",
-							"title": "graph 2",
-							"valueField": "column-2"
+							"title": "videos per day",
+							"valueField": "count"
 						}
 					],
-					"guides": [],
 					"valueAxes": [
 						{
 							"id": "ValueAxis-1",
 							"title": "Axis title"
 						}
 					],
-					"allLabels": [],
-					"balloon": {},
 					"legend": {
 						"enabled": true,
 						"useGraphSettings": true
-					},
-					"titles": [
-						{
-							"id": "Title-1",
-							"size": 15,
-							"text": "Chart Title"
-						}
-					],
-					"dataProvider": [
-						{
-							"category": "category 1",
-							"column-1": 8,
-							"column-2": 5
-						},
-						{
-							"category": "category 2",
-							"column-1": 6,
-							"column-2": 7
-						}
-					]
+					}
 				}
 			);
+	AmCharts.makeChart("usersperday",
+			{
+				"type": "serial",
+				"categoryField": "category",
+				"startDuration": 1,
+				"categoryAxis": {
+					"gridPosition": "start"
+				},
+				"graphs": [
+					{
+						"balloonText": "[[title]] of [[category]]:[[value]]",
+						"bullet": "round",
+						"id": "AmGraph-1",
+						"title": "graph 1",
+						"valueField": "column-1"
+					}
+				],
+				"valueAxes": [
+					{
+						"id": "ValueAxis-1",
+						"title": "users per date"
+					}
+				],
+				"legend": {
+					"enabled": true,
+					"useGraphSettings": true
+				},
+				"dataProvider": [
+					{
+						"category": "category 1",
+						"column-1": 8,
+					},
+					{
+						"category": "category 2",
+						"column-1": 6,
+					}
+				]
+			}
+		);
 	</script>
 </head>
 <body>
@@ -92,20 +106,40 @@
   <div class="panel with-nav-tabs panel-default">
 	<div class="panel-heading" style="background:#FFFFCC  !important">
 	    <ul class="nav nav-tabs">
-	   	<li class="active"><a href="#tab1default" data-toggle="tab">Number of uploaded videos per month</a></Dli>
+	   	<li class="active"><a href="#tab1default" data-toggle="tab">Number of uploaded videos per day</a></Dli>
 	    </ul>
 	</div>
     <div class="panel-body">
     	<div class="tab-content">
         	<div class="tab-pane fade in active" id="tab1default">
-   				<div id="videosperdate" style="width: 100%; height: 400px; background-color: #FFFFFF;" ></div>
+   				<div id="videosperday" style="width: 100%; height: 400px; background-color: #FFFFFF;" ></div>
 	        </div>
 	 
 	   	</div>
 	</div> 
 
   </div>
- 
 </div>
+
+
+<div class="container">
+  <div class="panel with-nav-tabs panel-default">
+	<div class="panel-heading" style="background:#FFFFCC  !important">
+	    <ul class="nav nav-tabs">
+	   	<li class="active"><a href="#tab1default" data-toggle="tab">Number of distinct users per month</a></Dli>
+	    </ul>
+	</div>
+    <div class="panel-body">
+    	<div class="tab-content">
+        	<div class="tab-pane fade in active" id="tab1default">
+   				<div id="usersperday" style="width: 100%; height: 400px; background-color: #FFFFFF;" ></div>
+	        </div>
+	 
+	   	</div>
+	</div> 
+
+  </div>
+</div>
+
 </body>
 </html>
