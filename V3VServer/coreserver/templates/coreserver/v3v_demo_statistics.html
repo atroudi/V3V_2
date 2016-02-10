@@ -144,10 +144,6 @@ var jsonData = {
 		"marginLeft" : 40,
 		"autoMarginOffset" : 20,
 		"dataDateFormat" : "YYYY-MM-DD",
-		"dataLoader": {
-		    "url": "get_videos_per_day",
-		    "format": "json"
-		 },
 		"valueAxes" : [ {
 			"id" : "v1",
 			"axisAlpha" : 0,
@@ -215,7 +211,7 @@ var jsonData = {
 			"enabled" : true
 		}
 	};
-
+jsonData["dataLoader"] = { "url": "get_videos_per_day", "format": "json"}; 
 var videosPerDayChart = AmCharts.makeChart("videosperday", jsonData);
 
 //videosPerDayChart.addListener("rendered", zoomChart);
