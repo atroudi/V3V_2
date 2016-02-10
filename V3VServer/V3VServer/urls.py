@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^upload_segment', views.upload_segment, name='Upload segment'),
     url(r'^register_segment', views.register_segment, name='Register segment'),
     url(r'^get_videos_per_day', views.get_videos_per_day, name='Video statistics per day'),
+    url(r'^get_users_per_day', views.get_users_per_day, name='users statistics per day'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
