@@ -268,6 +268,8 @@ def get_users_per_day(request):
     data = Segment2D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('email', distinct=True))
     data_list = list(data)
     remove_none_element(data_list)
+    print ("here")
+    print (data_list)
     return JsonResponse(data_list, safe=False)
 
 def remove_none_element(data_list, key):
