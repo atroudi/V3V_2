@@ -16,7 +16,7 @@ function zoomChart(my_chart) {
 			my_chart.dataProvider.length - 1);
 }
 
-function jsonDataFactory(){
+function jsonDataFactory(url, categoryField){
 	var jsonData = {
 			"type" : "serial",
 			"theme" : "light",
@@ -81,7 +81,7 @@ function jsonDataFactory(){
 				"offset" : 50,
 				"scrollbarHeight" : 10
 			},
-			"categoryField" : "day",
+			"categoryField" : categoryField,
 			"categoryAxis" : {
 				"parseDates" : true,
 				"dashLength" : 1,
@@ -91,19 +91,52 @@ function jsonDataFactory(){
 				"enabled" : true
 			}
 		};
+		jsonData["dataLoader"] = { "url": url, "format": "json"};
 		return jsonData;
 }
 
-usersPerDayChartJson = jsonDataFactory();
-usersPerDayChartJson["dataLoader"] = { "url": "get_users_per_day", "format": "json"};
-var usersPerDayChart = AmCharts.makeChart("usersperday", usersPerDayChartJson);
-videosPerDayChartJson = jsonDataFactory();
-videosPerDayChartJson["dataLoader"] = { "url": "get_videos_per_day", "format": "json"}; 
-var videosPerDayChart = AmCharts.makeChart("videosperday", videosPerDayChartJson);
-//usersPerDayChart.addListener("rendered", zoomChart);
-//zoomChart(usersPerDayChart);
-//videosPerDayChart.addListener("rendered", zoomChart);
-//zoomChart(videosPerDayChart);
+var chartHTML = "<div class=\"container\">\
+<div class=\"panel with-nav-tabs panel-default\">\
+<div class=\"panel-heading\" style=\"background: #FFFFCC !important\">\
+	<ul class=\"nav nav-tabs\">\
+		<li class=\"active\"><a href=\"#tab1default\" data-toggle=\"tab\">{title}</a> </Dli>\
+	</ul>\
+</div>\
+<div class=\"panel-body\">\
+	<div class=\"tab-content\">\
+		<div class=\"tab-pane fade in active\" id=\"tab1default\">\
+			<div id=\"{id}\" style=\"width: 100%; height: 400px; background-color: #FFFFFF;\"></div>\
+		</div>\
+	</div>\
+</div>\
+</div>\
+</div>"
+
+var chartList = [
+	{'id':'videosperday','url':'get_videos_per_day', 'title':'Number of videos converted per day'},
+	{'id':'durationcount','url':'get_video_duration_count', 'title':'Duration of videos converted'},
+]
+
+//var html = ""
+//for (var chart in chartList){
+	//var tmptxt = chartHTML;
+	//tmptxt.replace("{id}", chart['id']);
+	//tmptxt.replace("{title}", chart['title']);
+	//html = html + tmptxt;
+//}
+//var chartDiv = document.getElementByName("charts");
+//chartDiv.innerHTML = html;
+
+//for (var chart in chartList){
+	//var jsonData = jsonDataFactory(chart['url']);
+	//var amChart = AmCharts.makeChart(chart['id'], jsonData);
+	//amChart.addListener("rendered", zoomChart);
+	//zoomChart(amChart);
+//}
+
+var jsonData = jsonDataFactory("get_video_duration_count", "duration");
+var amChart = AmCharts.makeChart("durationcount", jsonData);
+
 </script>
 </head>
 <body>
@@ -127,19 +160,18 @@ var videosPerDayChart = AmCharts.makeChart("videosperday", videosPerDayChartJson
 			</p>
 		</center>
 	</div>
-
+<div name="charts">
 	<div class="container">
 		<div class="panel with-nav-tabs panel-default">
 			<div class="panel-heading" style="background: #FFFFCC !important">
 				<ul class="nav nav-tabs">
-					<li class="active"><a href="#tab1default" data-toggle="tab">Number
-							of uploaded videos per day</a> </Dli>
+					<li class="active"><a href="#tab1default" data-toggle="tab">Duration of videos uploaded</a> </Dli>
 				</ul>
 			</div>
 			<div class="panel-body">
 				<div class="tab-content">
 					<div class="tab-pane fade in active" id="tab1default">
-						<div id="videosperday"
+						<div id="durationcount"
 							style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
 					</div>
 
@@ -147,29 +179,8 @@ var videosPerDayChart = AmCharts.makeChart("videosperday", videosPerDayChartJson
 			</div>
 
 		</div>
-	</div>
-
-
-	<div class="container">
-		<div class="panel with-nav-tabs panel-default">
-			<div class="panel-heading" style="background: #FFFFCC !important">
-				<ul class="nav nav-tabs">
-					<li class="active"><a href="#tab1default" data-toggle="tab">Number
-							of distinct users per day</a> </Dli>
-				</ul>
-			</div>
-			<div class="panel-body">
-				<div class="tab-content">
-					<div class="tab-pane fade in active" id="tab1default">
-						<div id="usersperday"
-							style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
-					</div>
-
-				</div>
-			</div>
-
-		</div>
-	</div>
-
+	</div>	
+</div>
+	
 </body>
 </html>
