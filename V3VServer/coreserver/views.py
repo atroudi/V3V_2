@@ -7,7 +7,7 @@ import pysftp
 from ipware.ip import get_ip
 from rest_framework import status,viewsets
 from rest_framework.response import Response
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.core.servers.basehttp import FileWrapper
 from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext, loader
@@ -20,6 +20,7 @@ from coreserver.videoprocessers.simplevideoprocessor import SimpleVideoProcessor
 from django.http.request import QueryDict
 from rest_framework.decorators import renderer_classes
 from rest_framework.renderers import TemplateHTMLRenderer
+from django.db.models import Count
 
 import traceback
 
@@ -253,4 +254,11 @@ def calculate_statistics():
     context['users'] = str(10)
     print("number of videos:" + context['users'])
     return context
+
+# for statistics page
+@csrf_exempt
+def get_videos_per_day(request):
+    data = Segment3D.objects.extra({'day':"date(created)"}).values('day').annotate(count=Count('id'))
+    print (data)
+    return JsonResponse(list(data), safe=False)
     
