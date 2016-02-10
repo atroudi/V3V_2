@@ -145,7 +145,7 @@ def register_segment(request):
 ##################################Demo Part################################
 @csrf_exempt
 def get_statistics(request):
-    pass
+    return render_to_response('coreserver/v3v_demo_statistics.html')
 
 @csrf_exempt
 @renderer_classes((TemplateHTMLRenderer,))
