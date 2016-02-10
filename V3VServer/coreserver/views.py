@@ -273,6 +273,7 @@ def get_users_per_day(request):
     print (data_list)
     return JsonResponse(data_list, safe=False)
 
+@csrf_exempt
 def remove_none_element(data_list, key):
     for i, d in enumerate(data_list):
         if d[key]==None:
