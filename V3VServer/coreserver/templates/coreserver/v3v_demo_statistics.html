@@ -16,13 +16,12 @@ function zoomChart(my_chart) {
 			my_chart.dataProvider.length - 1);
 }
 
-function jsonDataFactory(url, categoryField, parseDates){
+function jsonDataFactory(url, categoryField, parseDates, valueBarTitle){
 	var jsonData = {
-			"type" : "serial",
-			"theme" : "light",
-			"marginRight" : 40,
-			"marginLeft" : 40,
-			"autoMarginOffset" : 20,
+			"type": "serial",
+			"theme": "light",
+			"marginRight": 70,
+			"marginLeft": 70,
 			"dataDateFormat" : "YYYY-MM-DD",
 			"valueAxes" : [ {
 				"id" : "v1",
@@ -34,24 +33,14 @@ function jsonDataFactory(url, categoryField, parseDates){
 				"borderThickness" : 1,
 				"shadowAlpha" : 0
 			},
-			"graphs" : [ {
-				"id" : "g1",
-				"balloon" : {
-					"drop" : true,
-					"adjustBorderColor" : false,
-					"color" : "#ffffff"
-				},
-				"bullet" : "round",
-				"bulletBorderAlpha" : 1,
-				"bulletColor" : "#FFFFFF",
-				"bulletSize" : 5,
-				"hideBulletsCount" : 50,
-				"lineThickness" : 2,
-				"title" : "videos per day",
-				"useLineColorForBulletBorder" : true,
-				"valueField" : "count",
-				"balloonText" : "<span style='font-size:18px;'>[[value]]</span>"
-			} ],
+			graphs: [{
+		    	"balloonText": "<b>[[category]]: [[value]]</b>",
+		    	"fillColorsField": "color",
+		    	"fillAlphas": 0.9,
+		    	"lineAlpha": 0.2,
+		    	"type": "column",
+		    	"valueField": "visits"
+		  	}],
 			"chartScrollbar" : {
 				"graph" : "g1",
 				"oppositeAxis" : false,
@@ -78,7 +67,7 @@ function jsonDataFactory(url, categoryField, parseDates){
 			},
 			"valueScrollbar" : {
 				"oppositeAxis" : false,
-				"offset" : 50,
+				"offset" : 10,
 				"scrollbarHeight" : 10
 			},
 			"categoryField" : categoryField,
@@ -89,7 +78,13 @@ function jsonDataFactory(url, categoryField, parseDates){
 			},
 			"export" : {
 				"enabled" : true
-			}
+			},
+			"valueAxes": [{
+			    "axisAlpha": 1,
+			    "position": "left",
+			    "offset" : 50,
+			    "title": valueBarTitle
+			  }],
 		};
 		jsonData["dataLoader"] = { "url": url, "format": "json"};
 		return jsonData;
@@ -113,9 +108,9 @@ var chartHTML = "<div class=\"container\">\
 </div>"
 
 var chartList = [
-	{'id':'videosperday','url':'get_videos_per_day', 'title':'Number of videos converted per day', 'categoryField':'day', 'parseDates':true},
-	{'id':'usersperday','url':'get_users_per_day', 'title':'Number of distinct users per day', 'categoryField':'day', 'parseDates':true},
-	{'id':'durationcount','url':'get_video_duration_count', 'title':'Duration of videos converted', 'categoryField':'duration', 'parseDates':false},
+	{'id':'videosperday','url':'get_videos_per_day', 'title':'videos converted', 'categoryField':'day', 'parseDates':true, 'valueBarTitle':'number of videos converted'},
+	{'id':'usersperday','url':'get_users_per_day', 'title':'Number of distinct users', 'categoryField':'day', 'parseDates':true, 'valueBarTitle':'number of distinct users'},
+	// {'id':'durationcount','url':'get_video_duration_count', 'title':'Duration of videos converted', 'categoryField':'duration', 'parseDates':false},
 ]
 
 function loadCharts(){
@@ -130,7 +125,8 @@ function loadCharts(){
 	chartDiv.innerHTML = html;
 	
 	for (var i in chartList){
-		var jsonData = jsonDataFactory(chartList[i]['url'], chartList[i]['categoryField'], chartList[i]['parseDates']);
+		var jsonData = jsonDataFactory(chartList[i]['url'], 
+				chartList[i]['categoryField'], chartList[i]['parseDates'], chartList[i]['valueBarTitle']);
 		var amChart = AmCharts.makeChart(chartList[i]['id'], jsonData);
 		amChart.addListener("rendered", zoomChart);
 		zoomChart(amChart);
@@ -159,27 +155,11 @@ function loadCharts(){
 			</p>
 		</center>
 	</div>
-
+	
+	<div id="try"></div>
+	
 	<div id="charts">
-		<div class="container">
-			<div class="panel with-nav-tabs panel-default">
-				<div class="panel-heading" style="background: #FFFFCC !important">
-					<ul class="nav nav-tabs">
-						<li class="active"><a href="#tab1default" data-toggle="tab">Duration of videos uploaded</a> </Dli>
-					</ul>
-				</div>
-				<div class="panel-body">
-					<div class="tab-content">
-						<div class="tab-pane fade in active" id="tab1default">
-							<div id="durationcount"
-								style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
-						</div>
-	
-					</div>
-				</div>
-	
-			</div>
-		</div>	
+		
 	</div>
 	
 </body>
