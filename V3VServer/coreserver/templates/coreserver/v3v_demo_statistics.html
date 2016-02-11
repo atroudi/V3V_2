@@ -16,7 +16,7 @@ function zoomChart(my_chart) {
 			my_chart.dataProvider.length - 1);
 }
 
-function jsonDataFactory(url, categoryField){
+function jsonDataFactory(url, categoryField, parseDates){
 	var jsonData = {
 			"type" : "serial",
 			"theme" : "light",
@@ -113,33 +113,33 @@ var chartHTML = "<div class=\"container\">\
 </div>"
 
 var chartList = [
-	{'id':'videosperday','url':'get_videos_per_day', 'title':'Number of videos converted per day'},
-	{'id':'durationcount','url':'get_video_duration_count', 'title':'Duration of videos converted'},
+	{'id':'videosperday','url':'get_videos_per_day', 'title':'Number of videos converted per day', 'categoryField':'day', 'parseDates':true},
+	{'id':'usersperday','url':'get_users_per_day', 'title':'Number of distinct users per day', 'categoryField':'day', 'parseDates':true},
+	{'id':'durationcount','url':'get_video_duration_count', 'title':'Duration of videos converted', 'categoryField':'duration', 'parseDates':false},
 ]
 
-//var html = ""
-//for (var chart in chartList){
-	//var tmptxt = chartHTML;
-	//tmptxt.replace("{id}", chart['id']);
-	//tmptxt.replace("{title}", chart['title']);
-	//html = html + tmptxt;
-//}
-//var chartDiv = document.getElementByName("charts");
-//chartDiv.innerHTML = html;
-
-//for (var chart in chartList){
-	//var jsonData = jsonDataFactory(chart['url']);
-	//var amChart = AmCharts.makeChart(chart['id'], jsonData);
-	//amChart.addListener("rendered", zoomChart);
-	//zoomChart(amChart);
-//}
-
-var jsonData = jsonDataFactory("get_video_duration_count", "duration");
-var amChart = AmCharts.makeChart("durationcount", jsonData);
+function loadCharts(){
+	var html = ""
+	for (var i in chartList){
+		var tmptxt = chartHTML;
+		tmptxt = tmptxt.replace("{id}", chartList[i]['id']);
+		tmptxt = tmptxt.replace("{title}", chartList[i]['title']);
+		html = html + tmptxt;
+	}
+	var chartDiv = document.getElementById("charts");
+	chartDiv.innerHTML = html;
+	
+	for (var i in chartList){
+		var jsonData = jsonDataFactory(chartList[i]['url'], chartList[i]['categoryField'], chartList[i]['parseDates']);
+		var amChart = AmCharts.makeChart(chartList[i]['id'], jsonData);
+		amChart.addListener("rendered", zoomChart);
+		zoomChart(amChart);
+	}
+}
 
 </script>
 </head>
-<body>
+<body onload="loadCharts()">
 
 	<div class="page-header">
 		{% load staticfiles %}
@@ -155,32 +155,32 @@ var amChart = AmCharts.makeChart("durationcount", jsonData);
 			<p>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; This demo converts
 				uploaded 2D sports videos to 3D videos. More info about this project
-				can be found <a
-					href="http://ds.qcri.org/index.php/cloud-based-multimedia-content-distribution-and-protection-platform/21-sub-project/55-dgc">here</a>
+				can be found <a href="http://ds.qcri.org/index.php/cloud-based-multimedia-content-distribution-and-protection-platform/21-sub-project/55-dgc">here</a>
 			</p>
 		</center>
 	</div>
-<div name="charts">
-	<div class="container">
-		<div class="panel with-nav-tabs panel-default">
-			<div class="panel-heading" style="background: #FFFFCC !important">
-				<ul class="nav nav-tabs">
-					<li class="active"><a href="#tab1default" data-toggle="tab">Duration of videos uploaded</a> </Dli>
-				</ul>
-			</div>
-			<div class="panel-body">
-				<div class="tab-content">
-					<div class="tab-pane fade in active" id="tab1default">
-						<div id="durationcount"
-							style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
-					</div>
 
+	<div id="charts">
+		<div class="container">
+			<div class="panel with-nav-tabs panel-default">
+				<div class="panel-heading" style="background: #FFFFCC !important">
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#tab1default" data-toggle="tab">Duration of videos uploaded</a> </Dli>
+					</ul>
 				</div>
+				<div class="panel-body">
+					<div class="tab-content">
+						<div class="tab-pane fade in active" id="tab1default">
+							<div id="durationcount"
+								style="width: 100%; height: 400px; background-color: #FFFFFF;"></div>
+						</div>
+	
+					</div>
+				</div>
+	
 			</div>
-
-		</div>
-	</div>	
-</div>
+		</div>	
+	</div>
 	
 </body>
 </html>
