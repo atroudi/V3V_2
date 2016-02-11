@@ -16,6 +16,7 @@ from coreserver.utils.taskinfoemailsender import EmailsTemplates
 import time
 from coreserver.resourcemanager.meezaprovisioner import MeezaProvisioner
 from celery import shared_task
+import traceback
 
 class Status(Enum):
     INITIATED=1
@@ -89,9 +90,9 @@ class CommunicationManager(object):
             self.finalize()
         except:
             # deprovision_resources so that it can be used later
-            # this is error prone e.g if the resource not finished its process yet
             ResourceManager.deprovision_resources(self.instance)
             print("resources deprovisioned after error has happened")
+            traceback.print_stack()
             # send error email
             self.error_email()
             #if instance.ipaddress == "127.0.0.1": # localhost
