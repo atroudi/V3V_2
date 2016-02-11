@@ -27,7 +27,7 @@ DEFAULT_INSTANCE_QUERY = dict(id=3)
 DEFAULT_INSTANCE_FIELDS = dict(
     ipaddress = '10.2.0.9', 
     username = 'qcri\\kcalagari', 
-    password = 'Qatar123',  
+    password = 'Qatar1',  
     port = 22,  
     executable_path = '/export/ds/KianaCalagari/Fast2D-3D/V3V_demo/V3V_run.sh',   
     output_path = '/export/ds/KianaCalagari/output_segments',
